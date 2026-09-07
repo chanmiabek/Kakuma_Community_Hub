@@ -435,6 +435,8 @@ kakuma-community-hub/
 
 The most important folders are these:
 
+
+
 src/
 │
 ├── app/          → Pages and routes
