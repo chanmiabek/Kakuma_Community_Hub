@@ -1,8 +1,9 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { ArrowRight, BriefcaseBusiness, Building2, CalendarDays, GraduationCap, HeartHandshake, Search, Sparkles, Store, Users } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { prisma } from "@/lib/db";
+import { Suspense } from "react";
+import { HomeDataSections } from "@/components/home/data-sections";
 
 const shortcuts = [
   { href: "/opportunities", icon: BriefcaseBusiness, title: "Jobs", text: "Find your next opportunity", tone: "green", image: "/images/kenya-turkana-region-refugee-camp-kakuma-vocational-training-typewriter-G47N0B.jpg" },
@@ -13,16 +14,8 @@ const shortcuts = [
   { href: "/events", icon: CalendarDays, title: "Events", text: "Join community activities", tone: "mint", image: "/images/life_in_Kakuma_hope_and_resilience_in_a_refugee_camp_01.jpg" },
 ];
 
-export default async function HomePage() {
-  let opportunities: any[] = [];
-  let stats = [0, 0, 0, 0];
-  try {
-    const result = await Promise.all([
-      prisma.opportunity.findMany({ where: { status: "OPEN" }, orderBy: { publishedAt: "desc" }, take: 3, include: { organization: { select: { name: true, slug: true, logoUrl: true } } } }),
-      Promise.all([prisma.opportunity.count({ where: { status: "OPEN" } }), prisma.organization.count({ where: { isPublished: true } }), prisma.business.count({ where: { isPublished: true } }), prisma.user.count()]),
-    ]);
-    opportunities = result[0]; stats = result[1];
-  } catch { /* The landing page remains usable while the database is being configured. */ }
+export default function HomePage() {
+  const dataSections = <Suspense fallback={<div className="container space-y-6 py-12"><div className="h-28 animate-pulse rounded-2xl bg-muted" /><div className="h-56 animate-pulse rounded-2xl bg-muted" /></div>}><HomeDataSections /></Suspense>;
 
   return <div className="min-h-screen bg-background text-foreground">
     <SiteHeader />
@@ -48,17 +41,20 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="container py-12"><div className="grid gap-3 rounded-2xl bg-secondary/70 p-5 sm:grid-cols-2 lg:grid-cols-4">{[{ icon: Users, value: stats[3], label: "Community Members" }, { icon: Building2, value: stats[1], label: "Organizations" }, { icon: Store, value: stats[2], label: "Local Businesses" }, { icon: BriefcaseBusiness, value: stats[0], label: "Opportunities" }].map(({ icon: Icon, value, label }) => <div key={label} className="flex items-center gap-3 border-b border-primary/15 px-3 py-2 last:border-0 sm:border-0"><span className="rounded-full bg-white p-3 text-primary"><Icon className="h-5 w-5" /></span><div><strong className="block text-2xl text-[#073b36]">{value.toLocaleString()}+</strong><span className="text-xs text-muted-foreground">{label}</span></div></div>)}</div></section>
+      {dataSections}
 
       <section className="container pb-14"><div className="mb-6"><h2 className="text-3xl font-extrabold text-[#073b36]">What you can find</h2><p className="text-muted-foreground">Everything you need to grow, learn and thrive in Kakuma</p></div><div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">{shortcuts.slice(0,5).map(({ href, icon: Icon, title, text, tone, image }) => <Link href={href} key={title} className="group overflow-hidden rounded-xl border bg-card shadow-sm transition hover:-translate-y-1 hover:shadow-lg"><div className="-mx-5 -mt-5 mb-5 h-28 overflow-hidden"><img src={image} alt={title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /></div><span className="mb-8 inline-flex rounded-full bg-secondary p-3 text-primary"><Icon className="h-6 w-6" /></span><h3 className="font-bold">{title}</h3><p className="mt-2 min-h-10 text-sm text-muted-foreground">{text}</p><span className="mt-4 inline-flex items-center text-sm font-bold text-primary">Explore <ArrowRight className="ml-1 h-4 w-4" /></span></Link>)}</div></section>
 
       <section className="container pb-14"><div className="flex flex-col items-center justify-between gap-5 rounded-2xl bg-gradient-to-r from-violet-100 to-purple-50 p-7 sm:flex-row"><div className="flex items-center gap-5"><span className="rounded-full bg-white p-4 text-violet-700 shadow-sm"><Sparkles className="h-8 w-8" /></span><div><h2 className="text-2xl font-extrabold text-violet-900">AI-powered recommendations</h2><p className="text-sm text-violet-800/80">Get personalized opportunities, services and resources based on your goals.</p></div></div><Link href="/ai" className="rounded-lg bg-violet-700 px-5 py-3 text-sm font-bold text-white hover:bg-violet-800">Get AI recommendations <ArrowRight className="ml-2 inline h-4 w-4" /></Link></div></section>
 
-      <section className="container pb-16"><div className="mb-6 flex items-end justify-between"><div><h2 className="text-3xl font-extrabold text-[#073b36]">Featured opportunities</h2><p className="text-muted-foreground">Fresh ways to learn, work and grow</p></div><Link href="/opportunities" className="font-bold text-primary">View all <ArrowRight className="inline h-4 w-4" /></Link></div><div className="space-y-3">{opportunities.length ? opportunities.map((o) => <Link key={o.id} href={`/opportunities/${o.slug ?? o.id}`} className="flex flex-col justify-between gap-4 rounded-xl border bg-white p-5 shadow-sm transition hover:border-primary hover:shadow-md sm:flex-row sm:items-center"><div><h3 className="font-bold">{o.title}</h3><p className="mt-1 text-sm text-muted-foreground">{o.organization?.name ?? "Kakuma Community"}</p><span className="mt-2 inline-block rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-primary">{o.type}</span></div><span className="rounded-lg bg-primary px-5 py-2 text-sm font-bold text-white">View details</span></Link>) : <div className="rounded-xl border border-dashed p-10 text-center text-muted-foreground">Opportunities will appear here once they are published.</div>}</div></section>
       <section className="container pb-16"><div className="rounded-2xl bg-secondary/80 px-6 py-10 text-center"><h2 className="text-3xl font-extrabold text-[#073b36]">How it works</h2><p className="mt-1 text-sm text-muted-foreground">Simple steps to a brighter future</p><div className="mt-8 grid gap-8 md:grid-cols-4">{[{n:"1",title:"Create your profile",text:"Sign up and tell us about yourself"},{n:"2",title:"Explore opportunities",text:"Browse jobs, training, scholarships and more"},{n:"3",title:"Get recommendations",text:"Receive personalized suggestions"},{n:"4",title:"Take action",text:"Apply, learn and connect with your community"}].map((step) => <div key={step.n}><span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-primary font-bold text-white">{step.n}</span><h3 className="mt-3 font-bold capitalize">{step.title}</h3><p className="mt-1 text-sm text-muted-foreground">{step.text}</p></div>)}</div></div></section>    </main>
     <SiteFooter />
   </div>;
 }
+
+
+
+
 
 
 

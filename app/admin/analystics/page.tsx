@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/db";
 import { AnalyticsCharts } from "@/components/charts/analytics-charts";
