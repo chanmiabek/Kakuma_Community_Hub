@@ -36,19 +36,19 @@ export async function POST(req: Request) {
       data: {
         name: validatedData.name,
         email: validatedData.email,
-        password: hashedPassword,
+        passwordHash: hashedPassword,
         phone: validatedData.phone,
         location: validatedData.location,
       },
     })
 
     // Remove password from response
-    const { password, ...userWithoutPassword } = user
+    const { passwordHash: _passwordHash, ...safeUser } = user
 
     return NextResponse.json(
       { 
         message: 'User created successfully',
-        user: userWithoutPassword 
+        user: safeUser 
       },
       { status: 201 }
     )

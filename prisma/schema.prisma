@@ -1,69 +1,164 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL_UNPOOLED")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [pg_trgm, vector]
 }
 
-enum UserRole {
+// ─────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────
+
+enum Role {
   USER
-  MODERATOR
+  ORGANIZATION
+  BUSINESS
   ADMIN
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  SUSPENDED
 }
 
 enum OpportunityType {
   JOB
-  EDUCATION
-  VOLUNTEER
-  TRAINING
   INTERNSHIP
+  TRAINING
   SCHOLARSHIP
+  GRANT
+  VOLUNTEER
+  APPRENTICESHIP
 }
 
 enum OpportunityStatus {
   DRAFT
-  ACTIVE
+  OPEN
   CLOSED
   ARCHIVED
 }
 
 enum ApplicationStatus {
-  PENDING
+  SUBMITTED
+  UNDER_REVIEW
   SHORTLISTED
+  INTERVIEW
   ACCEPTED
   REJECTED
   WITHDRAWN
 }
 
+enum EventType {
+  WORKSHOP
+  TRAINING
+  MEETUP
+  JOB_FAIR
+  COMMUNITY
+  WEBINAR
+}
+
+enum ReportCategory {
+  SAFETY
+  INFRASTRUCTURE
+  HEALTH
+  WATER
+  EDUCATION
+  SECURITY
+  OTHER
+}
+
+enum ReportStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum NotificationType {
+  APPLICATION_UPDATE
+  NEW_OPPORTUNITY
+  MESSAGE
+  SYSTEM
+  VERIFICATION
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+// ─────────────────────────────────────────────────────────
+// Auth / Users
+// ─────────────────────────────────────────────────────────
+
 model User {
   id            String    @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
-  password      String?
+  passwordHash  String?
+  role          Role      @default(USER)
   phone         String?
-  bio           String?
+  bio           String?   @db.Text
   location      String?
-  skills        String[]
-  languages     String[]
-  role          UserRole  @default(USER)
+  country       String?   @default("Kenya")
+  languages     String[]  @default([])
   isActive      Boolean   @default(true)
+  lastSeenAt    DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
-  accounts      Account[]
-  sessions      Session[]
-  applications  Application[]
-  opportunities Opportunity[] @relation("CreatedOpportunities")
-  posts         Post[]
-  comments      Comment[]
-  
-  @@index([email])
+
+  accounts        Account[]
+  sessions        Session[]
+  profile         Profile?
+  skills          UserSkill[]
+  applications    Application[]
+  bookmarks       Bookmark[]
+  notifications   Notification[]
+  reports         CommunityReport[]
+  organization    Organization?
+  business        Business?
+  events          EventAttendee[]
+  sentMessages    Message[]        @relation("SentMessages")
+  receivedMessages Message[]       @relation("ReceivedMessages")
+
   @@index([role])
+  @@index([email])
+}
+
+model Profile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  headline       String?
+  summary        String?  @db.Text
+  dateOfBirth    DateTime?
+  gender         String?
+  nationality    String?
+  refugeeId      String?
+  campBlock      String?
+  yearsExperience Int     @default(0)
+  educationLevel String?
+  resumeUrl      String?
+  portfolioUrl   String?
+  githubUrl      String?
+  linkedinUrl    String?
+  availability   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Account {
@@ -79,11 +174,10 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+
   @@unique([provider, providerAccountId])
-  @@index([userId])
 }
 
 model Session {
@@ -91,105 +185,368 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  @@index([userId])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
-  
   @@unique([identifier, token])
 }
 
+// ─────────────────────────────────────────────────────────
+// Organizations / Businesses
+// ─────────────────────────────────────────────────────────
+
+model Organization {
+  id                 String             @id @default(cuid())
+  ownerId            String             @unique
+  name               String
+  slug               String             @unique
+  description        String             @db.Text
+  mission            String?            @db.Text
+  logoUrl            String?
+  coverUrl           String?
+  website            String?
+  email              String?
+  phone              String?
+  address            String?
+  camp               String?            @default("Kakuma")
+  registrationNumber String?
+  foundedYear        Int?
+  size               String?
+  focusAreas         String[]           @default([])
+  verificationStatus VerificationStatus @default(PENDING)
+  verifiedAt         DateTime?
+  isPublished        Boolean            @default(false)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  owner         User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  opportunities Opportunity[]
+  services      Service[]
+  events        Event[]
+
+  @@index([verificationStatus])
+  @@index([slug])
+}
+
+model Business {
+  id                 String             @id @default(cuid())
+  ownerId            String             @unique
+  name               String
+  slug               String             @unique
+  description        String             @db.Text
+  logoUrl            String?
+  coverUrl           String?
+  category           String
+  website            String?
+  email              String?
+  phone              String?
+  whatsapp           String?
+  address            String?
+  camp               String?            @default("Kakuma")
+  latitude           Float?
+  longitude          Float?
+  openingHours       Json?
+  verificationStatus VerificationStatus @default(PENDING)
+  verifiedAt         DateTime?
+  isPublished        Boolean            @default(false)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  products Product[]
+  services Service[]
+
+  @@index([category])
+  @@index([verificationStatus])
+}
+
+// ─────────────────────────────────────────────────────────
+// Opportunities / Applications
+// ─────────────────────────────────────────────────────────
+
 model Opportunity {
-  id          String            @id @default(cuid())
-  title       String
-  description String            @db.Text
-  type        OpportunityType
-  status      OpportunityStatus @default(ACTIVE)
-  location    String?
-  organization String?
-  requirements String[]         @default([])
-  benefits    String[]          @default([])
-  deadline    DateTime?
-  startDate   DateTime?
-  endDate     DateTime?
-  salary      String?
-  contactEmail String?
-  contactPhone String?
-  website     String?
-  tags        String[]          @default([])
-  viewCount   Int               @default(0)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  
-  createdBy   String
-  creator     User              @relation("CreatedOpportunities", fields: [createdBy], references: [id])
+  id               String            @id @default(cuid())
+  organizationId   String
+  title            String
+  slug             String            @unique
+  description      String            @db.Text
+  requirements     String?           @db.Text
+  responsibilities String?           @db.Text
+  type             OpportunityType
+  status           OpportunityStatus @default(DRAFT)
+  category         String
+  location         String?
+  isRemote         Boolean           @default(false)
+  salaryMin        Int?
+  salaryMax        Int?
+  currency         String?           @default("KES")
+  deadline         DateTime?
+  startDate        DateTime?
+  duration         String?
+  positions        Int               @default(1)
+  applyUrl         String?
+  contactEmail     String?
+  tags             String[]          @default([])
+  views            Int               @default(0)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  publishedAt      DateTime?
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   applications Application[]
-  comments    Comment[]
-  
-  @@index([type])
-  @@index([status])
-  @@index([createdBy])
-  @@index([createdAt])
+  bookmarks    Bookmark[]
+  embeddings   Embedding[]
+
+  @@index([status, type])
+  @@index([category])
+  @@index([organizationId])
+  @@index([deadline])
 }
 
 model Application {
   id            String            @id @default(cuid())
   opportunityId String
   userId        String
-  status        ApplicationStatus @default(PENDING)
+  status        ApplicationStatus @default(SUBMITTED)
   coverLetter   String?           @db.Text
-  resume        String?
-  notes         String?
+  resumeUrl     String?
+  answers       Json?
+  notes         String?           @db.Text
+  reviewedAt    DateTime?
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
-  
+
   opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+
   @@unique([opportunityId, userId])
-  @@index([opportunityId])
-  @@index([userId])
   @@index([status])
 }
 
-model Post {
-  id        String    @id @default(cuid())
-  title     String
-  content   String    @db.Text
-  authorId  String
-  published Boolean   @default(true)
-  tags      String[]  @default([])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  
-  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  comments Comment[]
-  
-  @@index([authorId])
-  @@index([published])
-  @@index([createdAt])
+model Bookmark {
+  id            String   @id @default(cuid())
+  userId        String
+  opportunityId String
+  createdAt     DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, opportunityId])
 }
 
-model Comment {
+// ─────────────────────────────────────────────────────────
+// Services / Products / Skills
+// ─────────────────────────────────────────────────────────
+
+model Service {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  description    String   @db.Text
+  category       String
+  price          String?
+  currency       String?  @default("KES")
+  imageUrl       String?
+  contactPhone   String?
+  contactEmail   String?
+  address        String?
+  latitude       Float?
+  longitude      Float?
+  isPublished    Boolean  @default(false)
+  organizationId String?
+  businessId     String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  business     Business?     @relation(fields: [businessId], references: [id], onDelete: SetNull)
+
+  @@index([category])
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  businessId  String
+  name        String
+  slug        String
+  description String?  @db.Text
+  price       Int?
+  currency    String   @default("KES")
+  imageUrl    String?
+  inStock     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, slug])
+}
+
+model Skill {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String     @unique
+  category    String
+  description String?    @db.Text
+  createdAt   DateTime   @default(now())
+
+  users UserSkill[]
+
+  @@index([category])
+}
+
+model UserSkill {
+  id        String     @id @default(cuid())
+  userId    String
+  skillId   String
+  level     SkillLevel @default(BEGINNER)
+  years     Int        @default(0)
+  createdAt DateTime   @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId])
+}
+
+// ─────────────────────────────────────────────────────────
+// Events
+// ─────────────────────────────────────────────────────────
+
+model Event {
+  id             String    @id @default(cuid())
+  title          String
+  slug           String    @unique
+  description    String    @db.Text
+  type           EventType
+  coverUrl       String?
+  location       String?
+  latitude       Float?
+  longitude      Float?
+  isOnline       Boolean   @default(false)
+  meetingUrl     String?
+  startsAt       DateTime
+  endsAt         DateTime
+  capacity       Int?
+  organizationId String?
+  isPublished    Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  organization Organization?   @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  attendees    EventAttendee[]
+
+  @@index([startsAt])
+}
+
+model EventAttendee {
   id        String   @id @default(cuid())
-  content   String   @db.Text
-  authorId  String
-  postId    String?
-  opportunityId String?
+  eventId   String
+  userId    String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  post        Post?        @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+}
+
+// ─────────────────────────────────────────────────────────
+// Community / Notifications / Messaging
+// ─────────────────────────────────────────────────────────
+
+model CommunityReport {
+  id          String         @id @default(cuid())
+  authorId    String
+  title       String
+  description String         @db.Text
+  category    ReportCategory
+  status      ReportStatus   @default(OPEN)
+  imageUrls   String[]       @default([])
+  latitude    Float?
+  longitude   Float?
+  location    String?
+  upvotes     Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([status, category])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String?          @db.Text
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  body       String   @db.Text
+  readAt     DateTime?
+  createdAt  DateTime @default(now())
+
+  sender   User @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([receiverId, readAt])
+}
+
+// ─────────────────────────────────────────────────────────
+// Taxonomies + AI
+// ─────────────────────────────────────────────────────────
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  kind        String
+  description String?
+  icon        String?
+  createdAt   DateTime @default(now())
+
+  @@index([kind])
+}
+
+model Embedding {
+  id            String                     @id @default(cuid())
+  entityType    String
+  entityId      String
+  opportunityId String?
+  content       String                     @db.Text
+  vector        Unsupported("vector(1536)")?
+  createdAt     DateTime                   @default(now())
+
   opportunity Opportunity? @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
-  
-  @@index([authorId])
-  @@index([postId])
-  @@index([opportunityId])
+
+  @@index([entityType, entityId])
+}
+
+model RecommendationLog {
+  id            String   @id @default(cuid())
+  userId        String
+  opportunityId String
+  score         Float
+  reason        String?  @db.Text
+  clicked       Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
 }

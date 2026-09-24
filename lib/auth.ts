@@ -1,93 +1,54 @@
-import { NextAuthOptions } from 'next-auth'
-import { PrismaAdapter } from '@auth/prisma-adapter'
-import CredentialsProvider from 'next-auth/providers/credentials'
-import GoogleProvider from 'next-auth/providers/google'
-import GitHubProvider from 'next-auth/providers/github'
-import bcrypt from 'bcryptjs'
-import { prisma } from './db'
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import bcrypt from "bcryptjs";
+import { prisma } from "@/lib/db";
+import { loginSchema } from "@/features/auth/validations";
+import type { Role } from "@prisma/client";
 
-export const authOptions: NextAuthOptions = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: {
-    strategy: 'jwt',
-  },
-  pages: {
-    signIn: '/login',
-    error: '/login',
-  },
+  session: { strategy: "jwt" },
+  pages: { signIn: "/login" },
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID || '',
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
-    }),
-    CredentialsProvider({
-      name: 'credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Invalid credentials')
-        }
+    Credentials({
+      credentials: { email: {}, password: {} },
+      async authorize(raw) {
+        const parsed = loginSchema.safeParse(raw);
+        if (!parsed.success) return null;
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
-        })
+        const user = await prisma.user.findUnique({ where: { email: parsed.data.email } });
+        if (!user || !user.passwordHash || !user.isActive) return null;
 
-        if (!user || !user.password) {
-          throw new Error('Invalid credentials')
-        }
+        const ok = await bcrypt.compare(parsed.data.password, user.passwordHash);
+        if (!ok) return null;
 
-        const isCorrectPassword = await bcrypt.compare(
-          credentials.password,
-          user.password
-        )
-
-        if (!isCorrectPassword) {
-          throw new Error('Invalid credentials')
-        }
-
-        if (!user.isActive) {
-          throw new Error('Account is disabled')
-        }
+        await prisma.user.update({ where: { id: user.id }, data: { lastSeenAt: new Date() } });
 
         return {
           id: user.id,
-          email: user.email,
           name: user.name,
+          email: user.email,
           image: user.image,
           role: user.role,
-        }
+        };
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: any) {
       if (user) {
-        return {
-          ...token,
-          id: user.id,
-          role: (user as any).role || 'USER',
-        }
+        token.id = user.id;
+        token.role = (user as { role: Role }).role;
       }
-      return token
+      return token;
     },
-    async session({ session, token }) {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: token.id,
-          role: token.role,
-        },
+    async session({ session, token }: any) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as Role;
       }
+      return session;
     },
   },
-}
+});
