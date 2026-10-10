@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { aiClient } from "@/ai/client";
+import { aiClient, isAiConfigured } from "@/ai/client";
 import { assistantPrompt } from "@/ai/prompts/assistant.prompt";
 import { retrieveContext } from "@/ai/rag/retrieve";
 import { answerWithContext } from "@/ai/rag/answer";
@@ -13,6 +13,13 @@ const schema = z.object({
 });
 
 export async function POST(req: Request) {
+  if (!isAiConfigured) {
+    return NextResponse.json(
+      { error: "AI is not configured. Set OPENAI_API_KEY in the server environment." },
+      { status: 503 },
+    );
+  }
+
   const body = await req.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Invalid payload" }, { status: 400 });

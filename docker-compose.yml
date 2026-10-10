@@ -10,20 +10,31 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d kakuma_hub"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   app:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/kakuma_hub?schema=public
       DIRECT_URL: postgresql://postgres:postgres@db:5432/kakuma_hub?schema=public
-      AUTH_SECRET: change-me
+      AUTH_SECRET: ${AUTH_SECRET:-change-me-for-local-development}
       AUTH_TRUST_HOST: "true"
       NEXT_PUBLIC_APP_URL: http://localhost:3000
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
+      AI_CHAT_MODEL: ${AI_CHAT_MODEL:-gpt-4o-mini}
+      AI_EMBEDDING_MODEL: ${AI_EMBEDDING_MODEL:-text-embedding-3-small}
+    command: ["sh", "-c", "npx prisma db push && npm run start"]
     ports:
       - "3000:3000"
 

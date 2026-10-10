@@ -9,5 +9,10 @@ export type PublicUser = {
 };
 
 export type UserWithSkills = PublicUser & {
-  skills: { id: string; name: string; level: SkillLevel; years: number }[];
+  skills: { 
+    id: string; 
+    name: string; 
+    level: SkillLevel; 
+    years: number 
+  }[];
 };

@@ -2,6 +2,17 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Local database
+
+This project uses PostgreSQL with the `pgvector` extension. Start the database before running Prisma or opening pages that read database data:
+
+```bash
+docker compose up -d db
+npx prisma db push
+```
+
+If Docker reports that it cannot connect to the Docker Engine, start Docker Desktop and run those commands again. The local connection settings are documented in `.env.example`.
+
 
 First, run the development server:
 
