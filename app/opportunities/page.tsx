@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -33,6 +34,10 @@ export default async function OpportunitiesPage({
     page,
     perPage,
   });
+
+  if (page > Math.max(totalPages, 1)) {
+    redirect(buildPageHref(sp, Math.max(totalPages, 1)));
+  }
 
   const firstResult = total === 0 ? 0 : (page - 1) * perPage + 1;
   const lastResult = Math.min(page * perPage, total);
