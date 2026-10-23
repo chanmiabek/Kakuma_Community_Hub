@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RotateCcw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,14 @@ export function OpportunityFilters() {
   const [type, setType] = useState(params.get("type") ?? "");
   const [category, setCategory] = useState(params.get("category") ?? "");
   const [location, setLocation] = useState(params.get("location") ?? "");
+
+  // Keep filter controls in sync with browser back/forward navigation.
+  useEffect(() => {
+    setQ(params.get("q") ?? "");
+    setType(params.get("type") ?? "");
+    setCategory(params.get("category") ?? "");
+    setLocation(params.get("location") ?? "");
+  }, [params]);
 
   function apply() {
     const next = new URLSearchParams();
