@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/utils";
 import { OPPORTUNITY_TYPES } from "@/config/categories";
+import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from "@/lib/constatnts";
 import type { Prisma } from "@prisma/client";
 
 type SearchArgs = {
@@ -58,18 +59,33 @@ export const opportunityService = {
       ...(conditions.length > 0 ? { AND: conditions } : {}),
     };
 
-    const [items, total] = await Promise.all([
-      prisma.opportunity.findMany({
-        where,
-        orderBy: { publishedAt: "desc" },
-        skip: (page - 1) * perPage,
-        take: perPage,
-        include: { organization: { select: { name: true, slug: true, logoUrl: true } } },
-      }),
-      prisma.opportunity.count({ where }),
-    ]);
+    const requestedPage =
+      Number.isSafeInteger(page) && page > 0 ? page : 1;
+    const safePerPage =
+      Number.isSafeInteger(perPage) && perPage > 0
+        ? Math.min(MAX_PAGE_SIZE, perPage)
+        : DEFAULT_PAGE_SIZE;
 
-    return { items, total, page, perPage, totalPages: Math.ceil(total / perPage) };
+    // Count first so out-of-range pages never produce an oversized database skip.
+    const total = await prisma.opportunity.count({ where });
+    const totalPages = Math.ceil(total / safePerPage);
+    const resolvedPage = Math.min(requestedPage, Math.max(totalPages, 1));
+
+    const items = await prisma.opportunity.findMany({
+      where,
+      orderBy: { publishedAt: "desc" },
+      skip: (resolvedPage - 1) * safePerPage,
+      take: safePerPage,
+      include: { organization: { select: { name: true, slug: true, logoUrl: true } } },
+    });
+
+    return {
+      items,
+      total,
+      page: resolvedPage,
+      perPage: safePerPage,
+      totalPages,
+    };
   },
 
   async getByIdOrSlug(idOrSlug: string) {
