@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/utils";
+import { OPPORTUNITY_TYPES } from "@/config/categories";
 import type { Prisma } from "@prisma/client";
 
 type SearchArgs = {
@@ -13,18 +14,47 @@ type SearchArgs = {
 
 export const opportunityService = {
   async search({ q, type, category, location, page = 1, perPage = 20 }: SearchArgs) {
+    const normalizedQuery = q?.trim();
+    const normalizedLocation = location?.trim();
+    const validType = OPPORTUNITY_TYPES.find((candidate) => candidate === type);
+    const conditions: Prisma.OpportunityWhereInput[] = [];
+
+    if (validType) {
+      conditions.push({ type: validType });
+    }
+
+    if (category?.trim()) {
+      conditions.push({ category: category.trim() });
+    }
+
+    if (normalizedLocation) {
+      if (normalizedLocation.toLocaleLowerCase() === "remote") {
+        conditions.push({
+          OR: [
+            { isRemote: true },
+            { location: { contains: normalizedLocation, mode: "insensitive" } },
+          ],
+        });
+      } else {
+        conditions.push({
+          location: { contains: normalizedLocation, mode: "insensitive" },
+        });
+      }
+    }
+
+    if (normalizedQuery) {
+      conditions.push({
+        OR: [
+          { title: { contains: normalizedQuery, mode: "insensitive" } },
+          { description: { contains: normalizedQuery, mode: "insensitive" } },
+          { tags: { has: normalizedQuery } },
+        ],
+      });
+    }
+
     const where: Prisma.OpportunityWhereInput = {
       status: "OPEN",
-      ...(type && { type: type as Prisma.OpportunityWhereInput["type"] }),
-      ...(category && { category }),
-      ...(location && { location: { contains: location, mode: "insensitive" } }),
-      ...(q && {
-        OR: [
-          { title: { contains: q, mode: "insensitive" } },
-          { description: { contains: q, mode: "insensitive" } },
-          { tags: { has: q } },
-        ],
-      }),
+      ...(conditions.length > 0 ? { AND: conditions } : {}),
     };
 
     const [items, total] = await Promise.all([
