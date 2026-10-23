@@ -18,6 +18,7 @@ import { CATEGORIES, OPPORTUNITY_TYPES } from "@/config/categories";
 export function OpportunityFilters() {
   const router = useRouter();
   const params = useSearchParams();
+  const searchParamsKey = params.toString();
   const [q, setQ] = useState(params.get("q") ?? "");
   const [type, setType] = useState(params.get("type") ?? "");
   const [category, setCategory] = useState(params.get("category") ?? "");
@@ -25,11 +26,12 @@ export function OpportunityFilters() {
 
   // Keep filter controls in sync with browser back/forward navigation.
   useEffect(() => {
-    setQ(params.get("q") ?? "");
-    setType(params.get("type") ?? "");
-    setCategory(params.get("category") ?? "");
-    setLocation(params.get("location") ?? "");
-  }, [params]);
+    const currentParams = new URLSearchParams(searchParamsKey);
+    setQ(currentParams.get("q") ?? "");
+    setType(currentParams.get("type") ?? "");
+    setCategory(currentParams.get("category") ?? "");
+    setLocation(currentParams.get("location") ?? "");
+  }, [searchParamsKey]);
 
   function apply() {
     const next = new URLSearchParams();
