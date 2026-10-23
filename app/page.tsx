@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {
   ArrowRight, BriefcaseBusiness, CalendarDays, CheckCircle2, GraduationCap,
-  HeartHandshake, MapPin, Search, Sparkles, Store, Users, Building2
+  HeartHandshake, MapPin, Search, Sparkles, Store, Users
 } from "lucide-react";
 import { Suspense } from "react";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -107,7 +107,7 @@ export default function HomePage() {
             <div className="mt-9 grid gap-8 md:grid-cols-3">
               {steps.map((step) => <div key={step.number} className="relative text-center md:px-5"><span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-lg font-black text-primary">{step.number}</span><h3 className="mt-4 text-lg font-bold">{step.title}</h3><p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-muted-foreground">{step.text}</p></div>)}
             </div>
-            <div className="mt-9 flex flex-col items-center justify-center gap-3 border-t pt-7 sm:flex-row"><Link href="/(auth)/register" className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 font-bold text-primary-foreground transition hover:opacity-90">Join the community <ArrowRight className="ml-2 h-4 w-4" /></Link><Link href="/about" className="inline-flex items-center justify-center rounded-xl border px-5 py-3 font-bold transition hover:bg-secondary">Learn about the hub</Link></div>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 border-t pt-7 sm:flex-row"><Link href="/register" className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 font-bold text-primary-foreground transition hover:opacity-90">Join the community <ArrowRight className="ml-2 h-4 w-4" /></Link><Link href="/about" className="inline-flex items-center justify-center rounded-xl border px-5 py-3 font-bold transition hover:bg-secondary">Learn about the hub</Link></div>
           </div>
         </section>
       </main>
