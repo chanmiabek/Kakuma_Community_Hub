@@ -3,12 +3,148 @@
 @tailwind utilities;
 
 @layer base {
-  :root { --background: 210 25% 98%; --foreground: 150 20% 12%; --card: 0 0% 100%; --card-foreground: 150 20% 12%; --popover: 0 0% 100%; --popover-foreground: 150 20% 12%; --primary: 152 56% 23%; --primary-foreground: 0 0% 100%; --secondary: 145 35% 93%; --muted: 210 20% 95%; --muted-foreground: 215 12% 43%; --accent: 42 91% 53%; --accent-foreground: 150 20% 12%; --destructive: 1 77% 55%; --destructive-foreground: 0 0% 100%; --border: 214 18% 88%; --input: 214 18% 82%; --ring: 152 56% 23%; --radius: .75rem; }
-  .dark { --background: 150 18% 8%; --foreground: 145 25% 95%; --card: 150 16% 11%; --card-foreground: 145 25% 95%; --popover: 150 16% 11%; --popover-foreground: 145 25% 95%; --primary: 152 50% 42%; --secondary: 150 18% 20%; --muted: 150 12% 17%; --muted-foreground: 145 10% 68%; --border: 150 12% 23%; }
-  * { border-color: hsl(var(--border)); }
-  html { scroll-behavior: smooth; }
-  .bg-card { background-color: hsl(var(--card)); } .bg-popover { background-color: hsl(var(--popover)); } .text-card-foreground { color: hsl(var(--card-foreground)); } .text-popover-foreground { color: hsl(var(--popover-foreground)); } .text-muted-foreground { color: hsl(var(--muted-foreground)); } body { min-height: 100vh; background: hsl(var(--background)); color: hsl(var(--foreground)); font-feature-settings: "rlig" 1, "calt" 1; }
-  h1,h2,h3,h4,h5,h6 { letter-spacing: -.025em; }
-  :focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+  :root {
+    color-scheme: light;
+    --background: 42 35% 98%;
+    --foreground: 154 24% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 154 24% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 154 24% 12%;
+    --primary: 153 48% 24%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 145 29% 93%;
+    --secondary-foreground: 154 24% 16%;
+    --muted: 42 19% 95%;
+    --muted-foreground: 215 12% 42%;
+    --accent: 42 71% 68%;
+    --accent-foreground: 154 24% 12%;
+    --destructive: 1 77% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 150 15% 88%;
+    --input: 150 15% 82%;
+    --ring: 153 48% 24%;
+    --radius: 0.85rem;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: 155 22% 8%;
+    --foreground: 42 28% 96%;
+    --card: 155 18% 11%;
+    --card-foreground: 42 28% 96%;
+    --popover: 155 18% 11%;
+    --popover-foreground: 42 28% 96%;
+    --primary: 151 43% 45%;
+    --primary-foreground: 155 25% 7%;
+    --secondary: 154 16% 19%;
+    --secondary-foreground: 42 28% 96%;
+    --muted: 154 14% 16%;
+    --muted-foreground: 145 12% 69%;
+    --accent: 42 65% 63%;
+    --accent-foreground: 155 25% 7%;
+    --destructive: 1 65% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 154 13% 23%;
+    --input: 154 13% 25%;
+    --ring: 151 43% 55%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+  }
+
+  img {
+    height: auto;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  ::selection {
+    color: hsl(var(--primary-foreground));
+    background: hsl(var(--primary));
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+
+  .bg-card {
+    background-color: hsl(var(--card));
+  }
+
+  .bg-popover {
+    background-color: hsl(var(--popover));
+  }
+
+  .text-card-foreground {
+    color: hsl(var(--card-foreground));
+  }
+
+  .text-popover-foreground {
+    color: hsl(var(--popover-foreground));
+  }
+
+  .text-muted-foreground {
+    color: hsl(var(--muted-foreground));
+  }
 }
 
+/* Keep page gutters consistent across screens and public/dashboard routes. */
+.container {
+  width: min(100% - 2rem, 80rem);
+  margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .container {
+    width: min(100% - 3rem, 80rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
