@@ -26,7 +26,7 @@ export default async function OpportunitiesPage({
   const sp = await searchParams;
   const { page, perPage } = parsePagination(sp);
 
-  const { items, total, totalPages } = await opportunityService.search({
+  const result = await opportunityService.search({
     q: typeof sp.q === "string" ? sp.q : undefined,
     type: typeof sp.type === "string" ? sp.type : undefined,
     category: typeof sp.category === "string" ? sp.category : undefined,
@@ -34,13 +34,20 @@ export default async function OpportunitiesPage({
     page,
     perPage,
   });
+  const {
+    items,
+    total,
+    page: currentPage,
+    perPage: pageSize,
+    totalPages,
+  } = result;
 
-  if (page > Math.max(totalPages, 1)) {
-    redirect(buildPageHref(sp, Math.max(totalPages, 1)));
+  if (currentPage !== page) {
+    redirect(buildPageHref(sp, currentPage));
   }
 
-  const firstResult = total === 0 ? 0 : (page - 1) * perPage + 1;
-  const lastResult = Math.min(page * perPage, total);
+  const firstResult = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const lastResult = Math.min(currentPage * pageSize, total);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -111,9 +118,9 @@ export default async function OpportunitiesPage({
                 aria-label="Opportunity pagination"
                 className="mt-8 flex flex-col items-center justify-between gap-4 rounded-2xl border bg-card p-4 sm:flex-row"
               >
-                {page > 1 ? (
+                {currentPage > 1 ? (
                   <Link
-                    href={buildPageHref(sp, page - 1)}
+                    href={buildPageHref(sp, currentPage - 1)}
                     rel="prev"
                     className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border px-4 text-sm font-semibold transition hover:border-primary/30 hover:bg-secondary"
                   >
@@ -132,13 +139,13 @@ export default async function OpportunitiesPage({
 
                 <p className="text-sm text-muted-foreground">
                   Page{" "}
-                  <span className="font-bold text-foreground">{page}</span> of{" "}
+                  <span className="font-bold text-foreground">{currentPage}</span> of{" "}
                   <span className="font-bold text-foreground">{totalPages}</span>
                 </p>
 
-                {page < totalPages ? (
+                {currentPage < totalPages ? (
                   <Link
-                    href={buildPageHref(sp, page + 1)}
+                    href={buildPageHref(sp, currentPage + 1)}
                     rel="next"
                     className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
                   >
