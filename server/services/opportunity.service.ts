@@ -16,6 +16,7 @@ export const opportunityService = {
   async search({ q, type, category, location, page = 1, perPage = 20 }: SearchArgs) {
     const normalizedQuery = q?.trim();
     const normalizedLocation = location?.trim();
+    const normalizedCategory = category?.trim();
     const validType = OPPORTUNITY_TYPES.find((candidate) => candidate === type);
     const conditions: Prisma.OpportunityWhereInput[] = [];
 
@@ -23,12 +24,12 @@ export const opportunityService = {
       conditions.push({ type: validType });
     }
 
-    if (category?.trim()) {
-      conditions.push({ category: category.trim() });
+    if (normalizedCategory) {
+      conditions.push({ category: normalizedCategory });
     }
 
     if (normalizedLocation) {
-      if (normalizedLocation.toLocaleLowerCase() === "remote") {
+      if (normalizedLocation.toLowerCase() === "remote") {
         conditions.push({
           OR: [
             { isRemote: true },
