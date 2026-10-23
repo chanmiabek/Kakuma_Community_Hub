@@ -116,7 +116,7 @@ export function OpportunityFilters() {
           id="opportunity-location"
           value={location}
           onChange={(event) => setLocation(event.target.value)}
-          placeholder="e.g. Kakuma, Nairobi, Remote"
+          placeholder="e.g. Kakuma, Nairobi, Turkana, Remote"
           autoComplete="off"
         />
       </div>
