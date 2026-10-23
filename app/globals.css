@@ -126,18 +126,6 @@
   }
 }
 
-/* Keep page gutters consistent across screens and public/dashboard routes. */
-.container {
-  width: min(100% - 2rem, 80rem);
-  margin-inline: auto;
-}
-
-@media (min-width: 640px) {
-  .container {
-    width: min(100% - 3rem, 80rem);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
