@@ -1,10 +1,7 @@
-"use client";
-
 import Link from "next/link";
 import {
   ArrowRight,
   BriefcaseBusiness,
-  Building2,
   CalendarDays,
   CheckCircle2,
   GraduationCap,
@@ -14,7 +11,7 @@ import {
   Store,
   Users,
 } from "lucide-react";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { HomeDataSections } from "@/components/home/data-sections";
@@ -78,7 +75,6 @@ const steps = [
 ];
 
 export default function HomePage() {
-  const [query, setQuery] = useState("");
   const dataSections = (
     <Suspense
       fallback={
@@ -122,8 +118,6 @@ export default function HomePage() {
                 <input
                   id="home-search"
                   name="q"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
                   placeholder="Search jobs, training, services…"
                   className="min-w-0 flex-1 bg-transparent px-1 py-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 sm:text-base"
                 />
@@ -140,12 +134,7 @@ export default function HomePage() {
               <div className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-emerald-200/70 via-white/50 to-amber-100/80 blur-xl" aria-hidden="true" />
               <div className="relative overflow-hidden rounded-[1.75rem] border border-white/70 bg-white p-2 shadow-[0_30px_70px_-28px_rgba(12,50,40,.45)]">
                 <div className="relative h-[270px] overflow-hidden rounded-[1.25rem] bg-emerald-50 sm:h-[340px] lg:h-[390px]">
-                  <img
-                    src="/images/1000262382.jpg"
-                    alt="Community members learning and working together in Kakuma"
-                    className="h-full w-full object-cover"
-                    fetchPriority="high"
-                  />
+                  <img src="/images/1000262382.jpg" alt="Community members learning and working together in Kakuma" className="h-full w-full object-cover" fetchPriority="high" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a2e25]/75 via-transparent to-transparent" />
                   <div className="absolute inset-x-5 bottom-5 text-white sm:inset-x-7 sm:bottom-7">
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">Built around community</p>
@@ -174,11 +163,7 @@ export default function HomePage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {shortcuts.map(({ href, icon: Icon, title, text, image, iconClass }) => (
-              <Link
-                key={title}
-                href={href}
-                className="category-card group flex min-h-[148px] items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-emerald-700/30 hover:shadow-lg sm:p-5"
-              >
+              <Link key={title} href={href} className="category-card group flex min-h-[148px] items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-emerald-700/30 hover:shadow-lg sm:p-5">
                 <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-muted sm:h-28 sm:w-28">
                   <img src={image} alt="" loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
                 </div>
