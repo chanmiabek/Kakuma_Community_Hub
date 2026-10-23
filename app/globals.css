@@ -3,12 +3,153 @@
 @tailwind utilities;
 
 @layer base {
-  :root { --background: 210 25% 98%; --foreground: 150 20% 12%; --card: 0 0% 100%; --card-foreground: 150 20% 12%; --popover: 0 0% 100%; --popover-foreground: 150 20% 12%; --primary: 152 56% 23%; --primary-foreground: 0 0% 100%; --secondary: 145 35% 93%; --muted: 210 20% 95%; --muted-foreground: 215 12% 43%; --accent: 42 91% 53%; --accent-foreground: 150 20% 12%; --destructive: 1 77% 55%; --destructive-foreground: 0 0% 100%; --border: 214 18% 88%; --input: 214 18% 82%; --ring: 152 56% 23%; --radius: .75rem; }
-  .dark { --background: 150 18% 8%; --foreground: 145 25% 95%; --card: 150 16% 11%; --card-foreground: 145 25% 95%; --popover: 150 16% 11%; --popover-foreground: 145 25% 95%; --primary: 152 50% 42%; --secondary: 150 18% 20%; --muted: 150 12% 17%; --muted-foreground: 145 10% 68%; --border: 150 12% 23%; }
-  * { border-color: hsl(var(--border)); }
-  html { scroll-behavior: smooth; }
-  .bg-card { background-color: hsl(var(--card)); } .bg-popover { background-color: hsl(var(--popover)); } .text-card-foreground { color: hsl(var(--card-foreground)); } .text-popover-foreground { color: hsl(var(--popover-foreground)); } .text-muted-foreground { color: hsl(var(--muted-foreground)); } body { min-height: 100vh; background: hsl(var(--background)); color: hsl(var(--foreground)); font-feature-settings: "rlig" 1, "calt" 1; }
-  h1,h2,h3,h4,h5,h6 { letter-spacing: -.025em; }
-  :focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
+  :root {
+    color-scheme: light;
+    --background: 210 30% 98%;
+    --foreground: 155 22% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 155 22% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 155 22% 12%;
+    --primary: 158 61% 23%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 150 32% 94%;
+    --secondary-foreground: 158 50% 20%;
+    --muted: 210 24% 95%;
+    --muted-foreground: 215 13% 42%;
+    --accent: 43 92% 56%;
+    --accent-foreground: 155 22% 12%;
+    --destructive: 1 77% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 20% 88%;
+    --input: 214 20% 82%;
+    --ring: 158 61% 23%;
+    --radius: 0.9rem;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --background: 155 22% 8%;
+    --foreground: 145 25% 95%;
+    --card: 155 18% 11%;
+    --card-foreground: 145 25% 95%;
+    --popover: 155 18% 11%;
+    --popover-foreground: 145 25% 95%;
+    --primary: 154 54% 45%;
+    --primary-foreground: 160 30% 8%;
+    --secondary: 155 16% 19%;
+    --secondary-foreground: 145 25% 93%;
+    --muted: 155 12% 16%;
+    --muted-foreground: 145 10% 67%;
+    --accent: 43 92% 56%;
+    --accent-foreground: 155 22% 12%;
+    --border: 155 12% 23%;
+    --input: 155 12% 28%;
+    --ring: 154 54% 45%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    min-height: 100vh;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    letter-spacing: -0.025em;
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
+@layer components {
+  .hero-surface {
+    background:
+      radial-gradient(circle at 76% 26%, rgba(255, 255, 255, 0.96), transparent 28rem),
+      linear-gradient(125deg, #f1f8f3 0%, #e7f4ef 48%, #f8f5e9 100%);
+  }
+
+  .hero-orb {
+    pointer-events: none;
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(1px);
+  }
+
+  .hero-orb-one {
+    top: -7rem;
+    right: -8rem;
+    width: 24rem;
+    height: 24rem;
+    border: 1px solid rgba(21, 89, 65, 0.1);
+    box-shadow: 0 0 0 2.5rem rgba(21, 89, 65, 0.025), 0 0 0 5rem rgba(21, 89, 65, 0.02);
+  }
+
+  .hero-orb-two {
+    bottom: -10rem;
+    left: 36%;
+    width: 20rem;
+    height: 20rem;
+    background: rgba(238, 194, 70, 0.09);
+  }
+
+  .hero-heading-accent {
+    color: #176447;
+  }
+
+  .category-card:focus-visible {
+    outline-offset: 4px;
+  }
+
+  .container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      max-width: 1280px;
+    }
+  }
+}
