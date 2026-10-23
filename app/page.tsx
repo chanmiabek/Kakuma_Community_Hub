@@ -137,7 +137,7 @@ export default function HomePage() {
                 className="mt-8 flex max-w-xl flex-col gap-2 rounded-2xl border border-slate-200/80 bg-white p-2 shadow-[0_18px_50px_-30px_rgba(20,56,43,0.38)] sm:flex-row sm:items-center"
               >
                 <label htmlFor="community-search" className="sr-only">
-                  Search opportunities and resources
+                  Search jobs, training, and scholarships
                 </label>
                 <div className="flex min-w-0 flex-1 items-center gap-3 px-3">
                   <Search
@@ -148,7 +148,7 @@ export default function HomePage() {
                     id="community-search"
                     name="q"
                     type="search"
-                    placeholder="Search jobs, scholarships, services…"
+                    placeholder="Search jobs, training, scholarships…"
                     className="h-12 min-w-0 w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
                   />
                 </div>
