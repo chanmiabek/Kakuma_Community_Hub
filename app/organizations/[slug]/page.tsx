@@ -16,7 +16,7 @@ export default async function OrganizationPage({ params }: { params: Params }) {
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
       <main className="flex-1">
-        <div className="h-40 w-full bg-gradient-to-r from-primary/20 to-primary/5" />
+        <div className="relative h-48 w-full overflow-hidden bg-primary/20 sm:h-64"><img src={org.coverUrl || "/images/life_in_Kakuma_hope_and_resilience_in_a_refugee_camp_08.jpg"} alt="" className="h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-slate-950/5" /></div>
         <div className="container mx-auto px-4">
           <div className="-mt-12 mb-8 flex items-end gap-4">
             <div className="flex h-24 w-24 items-center justify-center rounded-xl border bg-card text-2xl font-bold shadow">
