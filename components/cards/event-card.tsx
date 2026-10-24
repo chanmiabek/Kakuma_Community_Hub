@@ -20,7 +20,8 @@ type Props = {
 export function EventCard({ event }: Props) {
   return (
     <Link href={`/events/${event.id}`}>
-      <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">\n        <img src={event.coverUrl || "/images/Life in Kakuma hope and resilience in a refugee camp photo 4.jpg"} alt="" className="h-36 w-full object-cover" loading="lazy" />
+      <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">
+        <img src={event.coverUrl || "/images/Life in Kakuma hope and resilience in a refugee camp photo 4.jpg"} alt="" className="h-36 w-full object-cover" loading="lazy" />
         <CardHeader>
           <div className="flex items-start justify-between gap-2">
             <h3 className="font-semibold leading-tight">{event.title}</h3>
