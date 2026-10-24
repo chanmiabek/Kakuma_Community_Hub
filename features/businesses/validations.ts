@@ -6,7 +6,7 @@ export const businessSchema = z.object({
   logoUrl: z.string().url().optional().or(z.literal("")),
   coverUrl: z.string().url().optional().or(z.literal("")),
   category: z.string().min(2),
-  email: z.string().email().optional(),
+  email: z.string().email().optional().or(z.literal("")),
   phone: z.string().optional(),
   address: z.string().optional(),
   website: z.string().url().optional().or(z.literal("")),
