@@ -8,6 +8,7 @@ type Props = {
     id: string;
     title: string;
     description: string;
+    imageUrls?: string[];
     category: string;
     status: string;
     location?: string | null;
