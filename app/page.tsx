@@ -103,7 +103,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
       <main>
-        <section className="relative isolate overflow-hidden bg-[#f4f7f1]">
+        <section className="relative isolate overflow-hidden bg-[#f4f7f1]" style={{ backgroundImage: "linear-gradient(90deg, rgba(244,247,241,.96) 0%, rgba(244,247,241,.9) 55%, rgba(244,247,241,.72) 100%), url(/images/life_in_Kakuma_hope_and_resilience_in_a_refugee_camp_08.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_80%_10%,rgba(222,184,92,0.19),transparent_34%),radial-gradient(ellipse_at_8%_65%,rgba(28,112,83,0.09),transparent_32%)]"
