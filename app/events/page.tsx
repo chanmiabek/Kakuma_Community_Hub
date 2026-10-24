@@ -2,6 +2,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { EventCard } from "@/components/cards/event-card";
 import { EmptyState } from "@/components/shared/empty-state";
+import { HeroSection } from "@/components/shared/hero-section";
 import { prisma } from "@/lib/db";
 
 export default async function EventsPage() {
@@ -14,8 +15,7 @@ export default async function EventsPage() {
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
       <main className="container mx-auto flex-1 px-4 py-10">
-        <h1 className="text-3xl font-bold tracking-tight">Events</h1>
-        <p className="mt-2 text-muted-foreground">Workshops, job fairs and community meetups</p>
+        <HeroSection title="Events & activities" eyebrow="Get involved" description="Find workshops, job fairs, training sessions and community meetups happening around you." imageUrl="/images/Life in Kakuma hope and resilience in a refugee camp photo 4.jpg" />
 
         <div className="mt-8">
           {events.length === 0 ? (
