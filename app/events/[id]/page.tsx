@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { prisma } from "@/lib/db";
 import { formatDateTime } from "@/lib/utils";
 import { HeroSection } from "@/components/shared/hero-section";
