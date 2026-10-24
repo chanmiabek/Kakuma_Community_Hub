@@ -4,6 +4,51 @@
 
 @layer base {
   :root {
+    --background: 210 30% 98%;
+    --foreground: 160 22% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 160 22% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 22% 12%;
+    --primary: 163 55% 23%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 158 28% 94%;
+    --secondary-foreground: 160 25% 18%;
+    --muted: 210 25% 95%;
+    --muted-foreground: 215 14% 43%;
+    --accent: 39 92% 55%;
+    --accent-foreground: 160 22% 12%;
+    --destructive: 1 77% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 20% 89%;
+    --input: 214 20% 85%;
+    --ring: 163 55% 23%;
+    --radius: .9rem;
+    --ai: 258 75% 58%;
+    --ai-foreground: 0 0% 100%;
+  }
+  .dark {
+    --background: 160 18% 8%;
+    --foreground: 145 25% 95%;
+    --card: 160 16% 11%;
+    --card-foreground: 145 25% 95%;
+    --popover: 160 16% 11%;
+    --popover-foreground: 145 25% 95%;
+    --primary: 158 48% 43%;
+    --primary-foreground: 160 25% 8%;
+    --secondary: 160 16% 18%;
+    --secondary-foreground: 145 25% 95%;
+    --muted: 160 12% 16%;
+    --muted-foreground: 145 10% 68%;
+    --border: 160 12% 23%;
+    --input: 160 12% 25%;
+    --ring: 158 48% 43%;
+    --accent: 39 90% 58%;
+    --ai: 258 75% 65%;
+  }
+  * { border-color: hsl(var(--border)); }
+  html { scroll-behavior: smooth; }
+
 
     --background: 40 33% 98%;
     --foreground: 165 35% 12%;
@@ -101,12 +146,42 @@
     -webkit-text-size-adjust: 100%;
   }
 
-
   body {
     min-height: 100vh;
     background: hsl(var(--background));
     color: hsl(var(--foreground));
     font-feature-settings: "rlig" 1, "calt" 1;
+
+  }
+  h1, h2, h3, h4, h5, h6 { letter-spacing: -.025em; }
+  :focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 3px; }
+  ::selection { background: hsl(var(--accent) / .35); }
+}
+
+@layer components {
+  .hero-shell {
+    background:
+      radial-gradient(ellipse at 88% 8%, hsl(var(--accent) / .18), transparent 30%),
+      linear-gradient(135deg, #f2f8f5 0%, #f8fbfa 55%, #e8f3ef 100%);
+  }
+  .hero-glow {
+    background-image: radial-gradient(hsl(var(--primary) / .055) 1px, transparent 1px);
+    background-size: 22px 22px;
+    mask-image: linear-gradient(to bottom right, black, transparent 75%);
+  }
+  .hero-highlight {
+    background: linear-gradient(transparent 68%, hsl(var(--accent) / .7) 68%);
+    padding-inline: .05em;
+  }
+  .category-card { background: hsl(var(--card)); }
+}
+
+.bg-card { background-color: hsl(var(--card)); }
+.bg-popover { background-color: hsl(var(--popover)); }
+.text-card-foreground { color: hsl(var(--card-foreground)); }
+.text-popover-foreground { color: hsl(var(--popover-foreground)); }
+.text-muted-foreground { color: hsl(var(--muted-foreground)); }
+=======
     text-rendering: optimizeLegibility;
   }
   h1, h2, h3, h4, h5, h6 { letter-spacing: -.035em; }
@@ -267,3 +342,4 @@
     max-width: 1280px;
   }
 }
+
