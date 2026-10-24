@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { OpportunityCard } from "@/components/cards/opportunity-card";
+import { HeroSection } from "@/components/shared/hero-section";
 import { OpportunityFilters } from "@/components/forms/opportunity-filters";
 import { EmptyState } from "@/components/shared/empty-state";
 import { opportunityService } from "@/server/services/opportunity.service";
@@ -53,33 +54,24 @@ export default async function OpportunitiesPage({
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
       <main className="container mx-auto flex-1 py-10 sm:py-12">
-        <header className="mb-8 flex flex-col justify-between gap-5 border-b pb-7 sm:flex-row sm:items-end">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
-              Discover your next step
-            </p>
-            <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              Opportunities
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
-              Explore jobs, internships, training, scholarships, grants, and
-              ways to contribute your skills.
-            </p>
-          </div>
-          <div className="flex items-center gap-3 rounded-xl border bg-card px-4 py-3 shadow-sm">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
-              <SlidersHorizontal className="h-5 w-5" />
-            </span>
-            <div>
-              <p className="text-xl font-extrabold leading-none text-foreground">
-                {total.toLocaleString()}
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {total === 1 ? "opportunity found" : "opportunities found"}
-              </p>
+        <div className="mb-8">
+          <HeroSection
+            eyebrow="Discover your next step"
+            title="Opportunities"
+            description="Explore jobs, internships, training, scholarships, grants, and ways to contribute your skills."
+            imageUrl="/images/kenya-turkana-region-refugee-camp-kakuma-vocational-training-typewriter-G47N0B.jpg"
+          >
+            <div className="flex items-center gap-3 rounded-xl border border-white/20 bg-white/95 px-4 py-3 text-slate-900 shadow-sm">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-primary">
+                <SlidersHorizontal className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="text-xl font-extrabold leading-none">{total.toLocaleString()}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{total === 1 ? "opportunity found" : "opportunities found"}</p>
+              </div>
             </div>
-          </div>
-        </header>
+          </HeroSection>
+        </div>/header>
 
         <div className="grid items-start gap-6 lg:grid-cols-[290px_minmax(0,1fr)] lg:gap-8">
           <aside className="lg:sticky lg:top-24">
