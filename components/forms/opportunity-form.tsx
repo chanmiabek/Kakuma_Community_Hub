@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { opportunitySchema, type OpportunityInput } from "@/features/opportunities/validations";
 import { OPPORTUNITY_TYPES } from "@/config/categories";
+import { ImageUpload } from "@/components/forms/image-upload";
 
 export function OpportunityForm({ opportunity }: { opportunity?: any }) {
   const router = useRouter();
@@ -21,6 +22,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: any }) {
     defaultValues: {
       title: opportunity?.title ?? "",
       description: opportunity?.description ?? "",
+      imageUrl: opportunity?.imageUrl ?? "",
       requirements: opportunity?.requirements ?? "",
       responsibilities: opportunity?.responsibilities ?? "",
       type: opportunity?.type ?? "JOB",
@@ -64,6 +66,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: any }) {
         <div className="space-y-2"><Label>Category</Label><Input {...form.register("category")} /></div>
       </div>
       <div className="space-y-2"><Label>Description</Label><Textarea rows={6} {...form.register("description")} /></div>
+      <ImageUpload label="Opportunity cover image" value={form.watch("imageUrl")} onChange={(url) => form.setValue("imageUrl", url, { shouldDirty: true })} description="Optional. Add a banner to make this opportunity stand out." />
       <div className="space-y-2"><Label>Requirements</Label><Textarea rows={4} {...form.register("requirements")} /></div>
       <div className="space-y-2"><Label>Responsibilities</Label><Textarea rows={4} {...form.register("responsibilities")} /></div>
       <div className="grid gap-4 md:grid-cols-2">
