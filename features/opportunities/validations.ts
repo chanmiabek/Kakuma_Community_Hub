@@ -3,6 +3,7 @@ import { z } from "zod";
 export const opportunitySchema = z.object({
   title: z.string().min(4).max(160),
   description: z.string().min(20),
+  imageUrl: z.string().url().optional().or(z.literal("")),
   requirements: z.string().optional(),
   responsibilities: z.string().optional(),
   type: z.enum(["JOB", "INTERNSHIP", "TRAINING", "SCHOLARSHIP", "GRANT", "VOLUNTEER", "APPRENTICESHIP"]),
