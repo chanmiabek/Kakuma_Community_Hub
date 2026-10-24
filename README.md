@@ -13,6 +13,18 @@ npx prisma db push
 
 If Docker reports that it cannot connect to the Docker Engine, start Docker Desktop and run those commands again. The local connection settings are documented in `.env.example`.
 
+### Optional image uploads
+
+Profile logos and cover images, opportunity banners, community report photos, business products, and services can include images or be published without them. Uploads use signed Cloudinary uploads. Create a Cloudinary account, then set these server-side variables in `.env` and your deployment environment:
+
+```env
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+```
+
+Never prefix the Cloudinary API secret with `NEXT_PUBLIC_` or commit real credentials. The uploader accepts JPG, PNG, WebP, and AVIF files up to 5 MB. After pulling the upgrade branch, run `npx prisma db push` against your development database and `npm run db:generate` to update Prisma Client for the new optional opportunity image field.
+
 
 First, run the development server:
 
