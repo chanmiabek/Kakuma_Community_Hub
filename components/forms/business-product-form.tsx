@@ -57,7 +57,7 @@ export function BusinessProductForm() {
       </div>
       <div className="space-y-2"><Label htmlFor="product-description">Description</Label><Textarea id="product-description" name="description" rows={3} maxLength={2000} /></div>
       <ImageUpload label="Product image (optional)" value={imageUrl} onChange={setImageUrl} />
-      <Button type="submit" disabled={loading || !imageUrl && false}>{loading ? "Publishing…" : "Add product"}</Button>
+      <Button type="submit" disabled={loading}>{loading ? "Publishing…" : "Add product"}</Button>
     </form>
   );
 }
