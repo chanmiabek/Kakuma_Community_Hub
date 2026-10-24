@@ -20,7 +20,7 @@ export default async function OrganizationPage({ params }: { params: Params }) {
         <div className="container mx-auto px-4">
           <div className="-mt-12 mb-8 flex items-end gap-4">
             <div className="flex h-24 w-24 items-center justify-center rounded-xl border bg-card text-2xl font-bold shadow">
-              {org.name.charAt(0)}
+              {org.logoUrl ? <img src={org.logoUrl} alt={org.name + " logo"} className="h-full w-full object-cover" /> : org.name.charAt(0)}
             </div>
             <div className="pb-2">
               <div className="flex items-center gap-2">
