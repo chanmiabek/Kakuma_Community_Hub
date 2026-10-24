@@ -42,7 +42,7 @@ export default async function OpportunityDetailPage({ params }: { params: Params
                   {opp.isRemote && <Badge variant="outline">Remote</Badge>}
                 </div>
               </HeroSection>
-            </div>      </div>
+            </div>
 
             <Card>
               <CardHeader><CardTitle>Description</CardTitle></CardHeader>
