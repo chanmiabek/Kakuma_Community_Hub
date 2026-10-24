@@ -274,6 +274,7 @@ model Opportunity {
   title            String
   slug             String            @unique
   description      String            @db.Text
+  imageUrl         String?
   requirements     String?           @db.Text
   responsibilities String?           @db.Text
   type             OpportunityType
