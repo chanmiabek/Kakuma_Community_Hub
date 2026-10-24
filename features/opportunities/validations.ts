@@ -15,7 +15,7 @@ export const opportunitySchema = z.object({
   currency: z.string().default("KES"),
   deadline: z.coerce.date().optional(),
   positions: z.coerce.number().int().min(1).default(1),
-  contactEmail: z.string().email().optional(),
+  contactEmail: z.string().email().optional().or(z.literal("")),
   applyUrl: z.string().url().optional(),
   tags: z.array(z.string()).default([]),
 });
