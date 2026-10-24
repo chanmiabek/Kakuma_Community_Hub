@@ -23,7 +23,7 @@ export default async function BusinessPage({ params }: { params: Params }) {
           <h1 className="text-3xl font-bold tracking-tight">{business.name}</h1>
           {business.verificationStatus === "VERIFIED" && <BadgeCheck className="h-6 w-6 text-primary" />}
         </div>
-        <p className="mt-2 text-muted-foreground">{business.category}</p>
+        <p className="mt-2 text-muted-foreground">{business.category}</p>\n          </div>\n        </div>
         <p className="mt-4 whitespace-pre-wrap text-sm">{business.description}</p>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
