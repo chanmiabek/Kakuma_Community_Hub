@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { businessSchema, type BusinessInput } from "@/features/businesses/validations";
+import { ImageUpload } from "@/components/forms/image-upload";
 
 export function BusinessProfileForm({ business }: { business: any }) {
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,8 @@ export function BusinessProfileForm({ business }: { business: any }) {
     defaultValues: {
       name: business?.name ?? "",
       description: business?.description ?? "",
+      logoUrl: business?.logoUrl ?? "",
+      coverUrl: business?.coverUrl ?? "",
       category: business?.category ?? "",
       email: business?.email ?? "",
       phone: business?.phone ?? "",
@@ -41,6 +44,10 @@ export function BusinessProfileForm({ business }: { business: any }) {
       <div className="space-y-2"><Label>Name</Label><Input {...form.register("name")} /></div>
       <div className="space-y-2"><Label>Category</Label><Input {...form.register("category")} /></div>
       <div className="space-y-2"><Label>Description</Label><Textarea rows={4} {...form.register("description")} /></div>
+      <div className="grid gap-5 md:grid-cols-2">
+        <ImageUpload label="Business logo" value={form.watch("logoUrl")} onChange={(url) => form.setValue("logoUrl", url, { shouldDirty: true })} description="Optional business logo." />
+        <ImageUpload label="Business cover image" value={form.watch("coverUrl")} onChange={(url) => form.setValue("coverUrl", url, { shouldDirty: true })} description="Optional hero/banner image shown on your public profile." />
+      </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>Email</Label><Input {...form.register("email")} /></div>
         <div className="space-y-2"><Label>Phone</Label><Input {...form.register("phone")} /></div>
