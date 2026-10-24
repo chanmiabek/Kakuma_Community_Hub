@@ -29,7 +29,7 @@ export function BusinessCard({ business }: Props) {
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary">
-              {business.name.charAt(0)}
+              {business.logoUrl ? <img src={business.logoUrl} alt="" className="h-full w-full object-cover" /> : business.name.charAt(0)}
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-1">
