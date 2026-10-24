@@ -27,7 +27,7 @@ export function OrganizationCard({ organization }: Props) {
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary">
-              {organization.name.charAt(0)}
+              {organization.logoUrl ? <img src={organization.logoUrl} alt="" className="h-full w-full object-cover" /> : organization.name.charAt(0)}
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-1">
