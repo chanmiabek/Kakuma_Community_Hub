@@ -16,8 +16,7 @@ export default async function ServicePage({ params }: { params: Params }) {
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
       <main className="container mx-auto flex-1 px-4 py-10">
-        <h1 className="text-3xl font-bold tracking-tight">{service.title}</h1>
-        <p className="mt-2 text-muted-foreground">{service.category}</p>
+        <HeroSection title={service.title} eyebrow={service.category} description={service.price ? `Price: ${service.price} ${service.currency ?? ""}` : "Community service"} imageUrl={service.imageUrl} />
         <Card className="mt-6">
           <CardContent className="pt-6 text-sm whitespace-pre-wrap">{service.description}</CardContent>
         </Card>
