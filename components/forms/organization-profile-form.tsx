@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { organizationSchema, type OrganizationInput } from "@/features/organizations/validations";
+import { ImageUpload } from "@/components/forms/image-upload";
 
 export function OrganizationProfileForm({ organization }: { organization: any }) {
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,8 @@ export function OrganizationProfileForm({ organization }: { organization: any })
     defaultValues: {
       name: organization?.name ?? "",
       description: organization?.description ?? "",
+      logoUrl: organization?.logoUrl ?? "",
+      coverUrl: organization?.coverUrl ?? "",
       mission: organization?.mission ?? "",
       email: organization?.email ?? "",
       phone: organization?.phone ?? "",
@@ -42,6 +45,10 @@ export function OrganizationProfileForm({ organization }: { organization: any })
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2"><Label>Name</Label><Input {...form.register("name")} /></div>
       <div className="space-y-2"><Label>Description</Label><Textarea rows={4} {...form.register("description")} /></div>
+      <div className="grid gap-5 md:grid-cols-2">
+        <ImageUpload label="Organization logo" value={form.watch("logoUrl")} onChange={(url) => form.setValue("logoUrl", url, { shouldDirty: true })} description="Optional profile logo." />
+        <ImageUpload label="Organization cover image" value={form.watch("coverUrl")} onChange={(url) => form.setValue("coverUrl", url, { shouldDirty: true })} description="Optional hero/banner image shown on your public profile." />
+      </div>
       <div className="space-y-2"><Label>Mission</Label><Textarea rows={3} {...form.register("mission")} /></div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2"><Label>Email</Label><Input {...form.register("email")} /></div>
