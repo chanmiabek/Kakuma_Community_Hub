@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ export function BusinessProductForm() {
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error ?? "Could not save product.");
       toast.success("Product added");
-      event.currentTarget.reset();
+      formElement.reset();
       setImageUrl("");
       setPrice("");
       router.refresh();
