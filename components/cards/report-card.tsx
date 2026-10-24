@@ -30,7 +30,8 @@ export function ReportCard({ report }: Props) {
           {report.author.name ?? "Anonymous"} · {formatDate(report.createdAt)}
         </p>
       </CardHeader>
-      <CardContent className="space-y-3">\n        {report.imageUrls?.[0] && <img src={report.imageUrls[0]} alt="" className="h-40 w-full rounded-xl object-cover" loading="lazy" />}
+      <CardContent className="space-y-3">
+        {report.imageUrls?.[0] && <img src={report.imageUrls[0]} alt="" className="h-40 w-full rounded-xl object-cover" loading="lazy" />}
         <p className="line-clamp-3 text-sm text-muted-foreground">{report.description}</p>
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {report.location ?? "Kakuma"}</span>
