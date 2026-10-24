@@ -28,6 +28,13 @@ This document tracks a safe, incremental path to improving the existing applicat
 - [ ] Audit small-screen navigation, forms, tables, and admin views.
 - [ ] Check contrast and image alternative text across key flows.
 
+### Image uploads and content publishing
+- [x] Add authenticated, signed Cloudinary uploads with a 5 MB limit and an image MIME allowlist.
+- [x] Allow optional organization/business logo and cover images, opportunity banners, community-report photos, product images, and service images.
+- [x] Provide photographic fallbacks so content remains attractive when an uploader leaves images blank.
+- [ ] Configure Cloudinary credentials in local and deployment environments.
+- [ ] Apply the Prisma schema update to the database and regenerate Prisma Client.
+
 ### Reliability and security
 - [ ] Reproduce and fix current database initialization/connectivity failures.
 - [ ] Review authentication, role checks, and object-level authorization on every protected route.
