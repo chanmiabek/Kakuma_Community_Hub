@@ -10,6 +10,7 @@ import { ApplyButton } from "@/components/forms/apply-button";
 import { BookmarkButton } from "@/components/forms/bookmark-button";
 import { opportunityService } from "@/server/services/opportunity.service";
 import { formatDate } from "@/lib/utils";
+import { HeroSection } from "@/components/shared/hero-section";
 
 type Params = Promise<{ id: string }>;
 
@@ -34,15 +35,13 @@ export default async function OpportunityDetailPage({ params }: { params: Params
         <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
           <article>
             <div className="mb-6">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge>{opp.type}</Badge>
-                <Badge variant="secondary">{opp.category}</Badge>
-                {opp.isRemote && <Badge variant="outline">Remote</Badge>}
-              </div>
-              <h1 className="mt-4 text-3xl font-bold tracking-tight">{opp.title}</h1>
-              <p className="mt-2 text-muted-foreground">
-                {opp.organization.name} · {opp.location ?? "Kakuma"}
-              </p>
+              <HeroSection title={opp.title} eyebrow={opp.organization.name} description={opp.location ?? "Kakuma community"} imageUrl={opp.imageUrl} >
+                <div className="flex flex-wrap gap-2">
+                  <Badge>{opp.type}</Badge>
+                  <Badge variant="secondary">{opp.category}</Badge>
+                  {opp.isRemote && <Badge variant="outline">Remote</Badge>}
+                </div>
+              </HeroSection>
             </div>
 
             <Card>

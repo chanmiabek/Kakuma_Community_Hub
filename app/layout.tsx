@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: { default: siteConfig.name, template: `%s · ${siteConfig.name}` },
   description: siteConfig.description,
+  applicationName: siteConfig.name,
+  keywords: ["Kakuma", "community hub", "jobs in Kakuma", "training", "scholarships", "community services", "local businesses", "education", "opportunities"],
   manifest: "/manifest.json",
   openGraph: {
     type: "website",
@@ -26,8 +28,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f7f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#10251d" },
   ],
 };
 

@@ -3,6 +3,7 @@ import { z } from "zod";
 export const serviceSchema = z.object({
   title: z.string().min(3).max(120),
   description: z.string().min(10),
+  imageUrl: z.string().url().optional().or(z.literal("")),
   category: z.string().min(2),
   price: z.string().optional(),
   currency: z.string().default("KES"),

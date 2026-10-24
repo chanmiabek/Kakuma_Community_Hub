@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { communityReportSchema, type CommunityReportInput } from "@/features/community-reports/validations";
+import { ImageUpload } from "@/components/forms/image-upload";
 
 const CATEGORIES = ["SAFETY", "INFRASTRUCTURE", "HEALTH", "WATER", "EDUCATION", "SECURITY", "OTHER"] as const;
 
@@ -21,7 +22,7 @@ export default function CreateReportPage() {
   const [loading, setLoading] = useState(false);
   const form = useForm<CommunityReportInput>({
     resolver: zodResolver(communityReportSchema),
-    defaultValues: { title: "", description: "", category: "OTHER", location: "" },
+    defaultValues: { title: "", description: "", category: "OTHER", location: "", imageUrls: [] },
   });
 
   async function onSubmit(values: CommunityReportInput) {
@@ -70,6 +71,7 @@ export default function CreateReportPage() {
                 <Label htmlFor="description">Description</Label>
                 <Textarea id="description" rows={6} {...form.register("description")} />
               </div>
+              <ImageUpload label="Add a photo (optional)" value={form.watch("imageUrls.0")} onChange={(url) => form.setValue("imageUrls", url ? [url] : [], { shouldDirty: true })} description="A photo can help explain the issue. You can submit without one." />
               <Button type="submit" disabled={loading} className="w-full">
                 {loading ? "Submitting..." : "Submit report"}
               </Button>
