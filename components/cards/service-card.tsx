@@ -19,7 +19,8 @@ type Props = {
 export function ServiceCard({ service }: Props) {
   return (
     <Link href={`/services/${service.slug}`}>
-      <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">\n        <img src={service.imageUrl || "/images/life_in_Kakuma_hope_and_resilience_in_a_refugee_camp_10.jpg"} alt="" className="h-36 w-full object-cover" loading="lazy" />
+      <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">
+        <img src={service.imageUrl || "/images/life_in_Kakuma_hope_and_resilience_in_a_refugee_camp_10.jpg"} alt="" className="h-36 w-full object-cover" loading="lazy" />
         <CardHeader>
           <div className="flex items-start justify-between gap-2">
             <h3 className="font-semibold leading-tight">{service.title}</h3>
