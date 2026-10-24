@@ -2,6 +2,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/db";
+import { HeroSection } from "@/components/shared/hero-section";
 
 export default async function SkillsPage() {
   const skills = await prisma.skill.findMany({ orderBy: { name: "asc" } });
@@ -14,8 +15,7 @@ export default async function SkillsPage() {
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
       <main className="container mx-auto flex-1 px-4 py-10">
-        <h1 className="text-3xl font-bold tracking-tight">Skills</h1>
-        <p className="mt-2 text-muted-foreground">Browse skills and find people who have them</p>
+        <HeroSection title="Skills & learning" eyebrow="Grow your future" description="Explore practical skills, learn from others and discover new ways to contribute." imageUrl="/images/the_right_to_learn_how_aid_reclaimed_childhood_for_binta_and_Mu-azu_07-8.jpg" />
 
         <div className="mt-8 space-y-8">
           {Object.entries(byCategory).map(([category, list]) => (
