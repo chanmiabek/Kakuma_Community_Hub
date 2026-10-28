@@ -71,7 +71,7 @@ export default async function OpportunitiesPage({
               </div>
             </div>
           </HeroSection>
-        </div>/header>
+        </div>
 
         <div className="grid items-start gap-6 lg:grid-cols-[290px_minmax(0,1fr)] lg:gap-8">
           <aside className="lg:sticky lg:top-24">
