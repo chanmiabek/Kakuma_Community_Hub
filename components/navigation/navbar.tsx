@@ -20,7 +20,7 @@ import {
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'Opportunities', href: '/opportunities' },
-  { name: 'Community', href: '/posts' },
+  { name: 'Community', href: '/community' },
   { name: 'About', href: '/about' },
 ]
 
@@ -28,6 +28,18 @@ export function Navbar() {
   const pathname = usePathname()
   const { data: session, status } = useSession()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const dashboardHref =
+    session?.user?.role === 'ORGANIZATION'
+      ? '/organizations'
+      : session?.user?.role === 'BUSINESS'
+        ? '/businesses'
+        : '/dashboard'
+  const settingsHref =
+    session?.user?.role === 'ORGANIZATION'
+      ? '/organizations/profile'
+      : session?.user?.role === 'BUSINESS'
+        ? '/businesses/profile'
+        : '/dashboard/profile'
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/90 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/75">
@@ -75,11 +87,11 @@ export function Navbar() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link href="/dashboard">
+                <DropdownMenuItem asChild><Link href={dashboardHref}>
                 <LayoutDashboard className="mr-2 h-4 w-4" />Dashboard</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/profile"><User className="mr-2 h-4 w-4" />Profile</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href="/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link href={settingsHref}><User className="mr-2 h-4 w-4" />Profile</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link href={settingsHref}><Settings className="mr-2 h-4 w-4" />Settings</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })}><LogOut className="mr-2 h-4 w-4" />Log out</DropdownMenuItem>
               </DropdownMenuContent>

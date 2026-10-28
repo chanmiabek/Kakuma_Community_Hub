@@ -4,8 +4,8 @@ import { auth } from "@/lib/auth";
 
 const PROTECTED_PREFIXES = [
   "/dashboard",
-  "/organization",
-  "/business",
+  "/organizations",
+  "/businesses",
   "/admin",
 ];
 

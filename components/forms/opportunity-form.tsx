@@ -49,7 +49,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: any }) {
     setLoading(false);
     if (!res.ok) { toast.error("Save failed"); return; }
     toast.success(opportunity ? "Updated" : "Created");
-    router.push("/organization/opportunities");
+    router.push("/organizations/opportunities");
   }
 
   return (

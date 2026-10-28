@@ -19,7 +19,7 @@ export default async function OrganizationDashboard() {
           <p className="mb-4 text-sm text-muted-foreground">
             Create your organization profile to publish opportunities.
           </p>
-          <Button asChild><Link href="/organization/profile">Create profile</Link></Button>
+          <Button asChild><Link href="/organizations/profile">Create profile</Link></Button>
         </CardContent>
       </Card>
     );
@@ -41,9 +41,9 @@ export default async function OrganizationDashboard() {
       <Card>
         <CardHeader><CardTitle>Quick actions</CardTitle></CardHeader>
         <CardContent className="flex flex-wrap gap-2">
-          <Button asChild><Link href="/organization/opportunities/create">Post opportunity</Link></Button>
-          <Button asChild variant="outline"><Link href="/organization/applications">View applications</Link></Button>
-          <Button asChild variant="outline"><Link href="/organization/profile">Edit profile</Link></Button>
+          <Button asChild><Link href="/organizations/opportunities/create">Post opportunity</Link></Button>
+          <Button asChild variant="outline"><Link href="/organizations/applications">View applications</Link></Button>
+          <Button asChild variant="outline"><Link href="/organizations/profile">Edit profile</Link></Button>
         </CardContent>
       </Card>
     </div>

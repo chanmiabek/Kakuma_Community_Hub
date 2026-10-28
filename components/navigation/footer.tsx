@@ -20,7 +20,7 @@ export function Footer() {
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-white">Quick Links</h3>
             <ul className="space-y-3">
               <li><Link href="/opportunities" className="text-sm text-slate-400 transition-colors hover:text-white">Opportunities</Link></li>
-              <li><Link href="/posts" className="text-sm text-slate-400 transition-colors hover:text-white">Community Posts</Link></li>
+              <li><Link href="/community" className="text-sm text-slate-400 transition-colors hover:text-white">Community</Link></li>
               <li><Link href="/about" className="text-sm text-slate-400 transition-colors hover:text-white">About Us</Link></li>
             </ul>
           </div>

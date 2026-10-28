@@ -34,21 +34,21 @@ import {
   
     if (role === "ORGANIZATION") {
       return [
-        { href: "/organization", label: "Overview", icon: LayoutDashboard },
-        { href: "/organization/profile", label: "Profile", icon: Building2 },
-        { href: "/organization/opportunities", label: "Opportunities", icon: Briefcase },
-        { href: "/organization/applications", label: "Applications", icon: FileText },
-        { href: "/organization/verification", label: "Verification", icon: ShieldCheck },
+        { href: "/organizations", label: "Overview", icon: LayoutDashboard },
+        { href: "/organizations/profile", label: "Profile", icon: Building2 },
+        { href: "/organizations/opportunities", label: "Opportunities", icon: Briefcase },
+        { href: "/organizations/applications", label: "Applications", icon: FileText },
+        { href: "/organizations/verification", label: "Verification", icon: ShieldCheck },
       ];
     }
   
     if (role === "BUSINESS") {
       return [
-        { href: "/business", label: "Overview", icon: LayoutDashboard },
-        { href: "/business/profile", label: "Profile", icon: Store },
-        { href: "/business/products", label: "Products", icon: ListChecks },
-        { href: "/business/services", label: "Services", icon: Wrench },
-        { href: "/business/verification", label: "Verification", icon: ShieldCheck },
+        { href: "/businesses", label: "Overview", icon: LayoutDashboard },
+        { href: "/businesses/profile", label: "Profile", icon: Store },
+        { href: "/businesses/products", label: "Products", icon: ListChecks },
+        { href: "/businesses/services", label: "Services", icon: Wrench },
+        { href: "/businesses/verification", label: "Verification", icon: ShieldCheck },
       ];
     }
   

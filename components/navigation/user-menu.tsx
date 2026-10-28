@@ -15,8 +15,8 @@ export function UserMenu({ user }: { user: Session["user"] }) {
 
   const dashboardHref =
     user.role === "ADMIN" ? "/admin"
-    : user.role === "ORGANIZATION" ? "/organization"
-    : user.role === "BUSINESS" ? "/business"
+    : user.role === "ORGANIZATION" ? "/organizations"
+    : user.role === "BUSINESS" ? "/businesses"
     : "/dashboard";
 
   return (

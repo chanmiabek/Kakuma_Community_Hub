@@ -17,7 +17,7 @@ export default async function BusinessDashboard() {
         <CardHeader><CardTitle>Set up your business</CardTitle></CardHeader>
         <CardContent>
           <p className="mb-4 text-sm text-muted-foreground">Create your business profile to list products and services.</p>
-          <Button asChild><Link href="/business/profile">Create profile</Link></Button>
+          <Button asChild><Link href="/businesses/profile">Create profile</Link></Button>
         </CardContent>
       </Card>
     );

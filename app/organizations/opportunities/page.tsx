@@ -22,7 +22,7 @@ export default async function OrganizationOpportunitiesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Opportunities</h1>
-        <Button asChild><Link href="/organization/opportunities/create">New opportunity</Link></Button>
+        <Button asChild><Link href="/organizations/opportunities/create">New opportunity</Link></Button>
       </div>
 
       {items.length === 0 ? (
@@ -41,7 +41,7 @@ export default async function OrganizationOpportunitiesPage() {
                 <div className="flex items-center gap-2">
                   <Badge>{o.status}</Badge>
                   <Button asChild size="sm" variant="outline">
-                    <Link href={`/organization/opportunities/${o.id}/edit`}>Edit</Link>
+                    <Link href={`/organizations/opportunities/${o.id}/edit`}>Edit</Link>
                   </Button>
                 </div>
               </CardContent>
