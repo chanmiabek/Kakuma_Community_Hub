@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { Button } from "@/components/ui/button";
 import { ReportCard } from "@/components/cards/report-card";
 import { EmptyState } from "@/components/shared/empty-state";
+import { HeroSection } from "@/components/shared/hero-section";
 import { prisma } from "@/lib/db";
 
 export default async function CommunityPage() {
@@ -17,14 +18,12 @@ export default async function CommunityPage() {
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
       <main className="container mx-auto flex-1 px-4 py-10">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Community reports</h1>
-            <p className="mt-2 text-muted-foreground">Report issues and follow what&apos;s happening</p>
-          </div>
-          <Button asChild>
-            <Link href="/community/reports/create">New report</Link>
-          </Button>
+        <div className="mb-8">
+          <HeroSection title="Community reports" eyebrow="Your voice matters" description="Share local concerns, add a photo if it helps, and follow community issues as they progress." imageUrl="/images/Life in Kakuma hope and resilience in a refugee camp photo 4 (1).jpg">
+            <Button asChild className="bg-white text-slate-900 hover:bg-white/90">
+              <Link href="/community/reports/create">Create a report</Link>
+            </Button>
+          </HeroSection>
         </div>
 
         <div className="mt-8">
