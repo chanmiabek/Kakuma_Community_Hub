@@ -2,11 +2,9 @@
 
 ## Executive summary
 
-Kakuma Community Hub is a Next.js platform intended to help community members discover opportunities, organizations, businesses, services, events, and community resources. Its planned experience includes public pages, member dashboards, and administrative tools, supported by a shared search and recommendation layer.
+Kakuma Community Hub is a Next.js platform intended to help community members discover opportunities, organizations, businesses, services, events, and community resources. The application also provides member, organization, business, and administrator workflows for managing profiles, applications, listings, and community content.
 
-The application uses PostgreSQL with the `pgvector` extension and Prisma for data access. The architecture also describes future AI capabilities—including semantic search, embeddings, recommendations, and retrieval-augmented generation (RAG). Optional image uploads use signed Cloudinary uploads, so listings and profiles can be published with or without images.
-
-The codebase is organized to keep route pages, reusable UI, feature logic, server-side business logic, and shared infrastructure separate. The structure below is a recommended architecture; check the current source tree when locating implemented features.
+The project uses PostgreSQL with Prisma for data access, and includes `pgvector`-based AI capabilities for semantic search, recommendations, and retrieval-augmented chat. See the [system architecture](docs/architecture/system-architecture.md), [AI architecture](docs/architecture/ai-architecture.md), and [database architecture](docs/architecture/database.md) documents for more detail.
 
 ## Developer onboarding checklist
 
@@ -63,8 +61,6 @@ npm run dev
 - [ ] Open [http://localhost:3000](http://localhost:3000).
 - [ ] Run the project's available checks before submitting changes. Check `package.json` for the supported scripts.
 
-The starter Next.js page is typically at `src/app/page.tsx` (or `app/page.tsx`, depending on the current project layout). The page updates as you edit and save it.
-
 ## Features and architecture
 
 The platform is organized around these areas:
@@ -75,34 +71,54 @@ The platform is organized around these areas:
 - **Administration:** management and verification workflows for platform content and accounts.
 - **Search and AI:** global and semantic search, recommendations, embeddings, and RAG, backed by PostgreSQL and `pgvector`.
 
+### Architecture overview
+
+The codebase follows a layered Next.js App Router architecture. Route pages and API handlers handle requests and rendering; feature modules contain domain-specific actions, queries, validation, and types; server services and repositories implement business operations and persistence; Prisma and PostgreSQL provide data storage. AI functionality is organized separately and is used by the chat, semantic search, and recommendation flows.
+
+```text
+Browser
+  └── app/ (Next.js pages, layouts, and API route handlers)
+       ├── components/ (shared UI)
+       ├── features/ (domain actions, queries, validation, and types)
+       ├── server/ (services, repositories, and background jobs)
+       ├── ai/ (chat/RAG, embeddings, semantic search, and recommendations)
+       └── lib/ (database client, auth, permissions, and shared utilities)
+            └── Prisma → PostgreSQL (+ pgvector)
+```
+
 ### Project structure
 
-The README's recommended structure separates responsibilities as follows:
+This reflects the current repository layout (top-level directories are used; application code is not under `src/`).
 
 | Directory | Responsibility |
 | --- | --- |
-| `src/app/` | Pages, layouts, and API routes |
-| `src/components/` | Reusable interface components |
-| `src/features/` | Feature-specific application logic |
-| `src/server/` | Server-side services, repositories, and jobs |
-| `src/ai/` | AI, embeddings, RAG, and recommendation logic |
-| `src/lib/` | Shared infrastructure, utilities, and permissions |
-| `src/types/` | TypeScript types |
-| `src/config/` | Application configuration |
-| `prisma/` | Database schema and seed data |
+| `app/` | Next.js App Router pages, layouts, loading states, and API route handlers under `app/api/` |
+| `components/` | Shared UI, navigation, forms, cards, maps, and providers |
+| `features/` | Domain modules, including actions, queries, validation, and feature types |
+| `server/` | Server-side services, repositories, and background jobs |
+| `ai/` | AI client, prompts, RAG, embeddings, semantic search, and recommendations |
+| `lib/` | Shared infrastructure such as database access, authentication, permissions, and utilities |
+| `config/`, `configs/` | Application settings, navigation, categories, and permissions |
+| `hooks/` | Reusable React hooks |
+| `types/` | Shared TypeScript types and declarations |
+| `prisma/` | Prisma schema and database seed data |
 | `tests/` | Unit, integration, and end-to-end tests |
-| `docs/` | Architecture, API, deployment, and product documentation |
+| `docs/` | Architecture, API, and project documentation |
+| `public/` | Static assets served by the application |
 
 Keep route files focused on pages and routing; put reusable UI and business logic in their corresponding components and feature/server modules.
 
 ### Optional image uploads
 
-Cloudinary uploads are signed. Profile logos and cover images, opportunity banners, community report photos, business products, and services may include images or be published without them. The uploader accepts JPG, PNG, WebP, and AVIF files up to 5 MB.
+Cloudinary uploads are signed. Profile logos and cover images, opportunity banners, community report photos, business products, and services may include images or be published without them. The upload route is `app/api/uploads/route.ts`; configure the Cloudinary environment variables above when using uploads.
 
 ## Useful links
 
 - [Next.js documentation](https://nextjs.org/docs)
 - [Learn Next.js](https://nextjs.org/learn)
 - [API documentation](docs/api/README.md)
+- [System architecture](docs/architecture/system-architecture.md)
+- [AI architecture](docs/architecture/ai-architecture.md)
+- [Database architecture](docs/architecture/database.md)
 - [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying)
 - [Deploy on Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
