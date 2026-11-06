@@ -1,21 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kakuma Community Hub
 
-## Getting Started
+## Executive summary
 
-### Local database
+Kakuma Community Hub is a Next.js platform intended to help community members discover opportunities, organizations, businesses, services, events, and community resources. Its planned experience includes public pages, member dashboards, and administrative tools, supported by a shared search and recommendation layer.
 
-This project uses PostgreSQL with the `pgvector` extension. Start the database before running Prisma or opening pages that read database data:
+The application uses PostgreSQL with the `pgvector` extension and Prisma for data access. The architecture also describes future AI capabilities—including semantic search, embeddings, recommendations, and retrieval-augmented generation (RAG). Optional image uploads use signed Cloudinary uploads, so listings and profiles can be published with or without images.
 
-```bash
-docker compose up -d db
-npx prisma db push
-```
+The codebase is organized to keep route pages, reusable UI, feature logic, server-side business logic, and shared infrastructure separate. The structure below is a recommended architecture; check the current source tree when locating implemented features.
 
-If Docker reports that it cannot connect to the Docker Engine, start Docker Desktop and run those commands again. The local connection settings are documented in `.env.example`.
+## Developer onboarding checklist
 
-### Optional image uploads
+### Prerequisites
 
-Profile logos and cover images, opportunity banners, community report photos, business products, and services can include images or be published without them. Uploads use signed Cloudinary uploads. Create a Cloudinary account, then set these server-side variables in `.env` and your deployment environment:
+- [ ] Install Node.js and a package manager (npm, yarn, pnpm, or bun).
+- [ ] Install and start Docker Desktop, or ensure the Docker Engine is available.
+- [ ] Clone the repository and open its project directory.
+
+### Set up the environment
+
+- [ ] Create a local `.env` file using `.env.example` as a reference.
+- [ ] Set the database connection details required by the local environment.
+- [ ] If you need image uploads, configure the Cloudinary variables below. These are optional for development without uploads.
 
 ```env
 CLOUDINARY_CLOUD_NAME=
@@ -23,526 +28,81 @@ CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 ```
 
-Never prefix the Cloudinary API secret with `NEXT_PUBLIC_` or commit real credentials. The uploader accepts JPG, PNG, WebP, and AVIF files up to 5 MB. After pulling the upgrade branch, run `npx prisma db push` against your development database and `npm run db:generate` to update Prisma Client for the new optional opportunity image field.
+**Keep credentials private:** never use `NEXT_PUBLIC_` for `CLOUDINARY_API_SECRET`, and never commit real credentials.
 
+### Start the database and prepare Prisma
 
-First, run the development server:
+- [ ] Start the local PostgreSQL database:
+
+```bash
+docker compose up -d db
+```
+
+- [ ] Apply the Prisma schema to the database:
+
+```bash
+npx prisma db push
+```
+
+The database uses PostgreSQL with `pgvector`. If Docker cannot connect to the Docker Engine, start Docker Desktop and retry.
+
+### Install dependencies and run the app
+
+- [ ] Install dependencies with the package manager used by the project. For npm:
+
+```bash
+npm install
+```
+
+- [ ] Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [ ] Open [http://localhost:3000](http://localhost:3000).
+- [ ] Run the project's available checks before submitting changes. Check `package.json` for the supported scripts.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The starter Next.js page is typically at `src/app/page.tsx` (or `app/page.tsx`, depending on the current project layout). The page updates as you edit and save it.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Features and architecture
 
-## Learn More
+The platform is organized around these areas:
 
-To learn more about Next.js, take a look at the following resources:
+- **Public experience:** landing page and discovery of opportunities, organizations, businesses, services, skills, events, and community resources.
+- **Member experience:** account, profile, applications, bookmarks, notifications, and recommendations.
+- **Organization and business tools:** profiles and management of listings and opportunities.
+- **Administration:** management and verification workflows for platform content and accounts.
+- **Search and AI:** global and semantic search, recommendations, embeddings, and RAG, backed by PostgreSQL and `pgvector`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Project structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The README's recommended structure separates responsibilities as follows:
 
-## Deploy on Vercel
+| Directory | Responsibility |
+| --- | --- |
+| `src/app/` | Pages, layouts, and API routes |
+| `src/components/` | Reusable interface components |
+| `src/features/` | Feature-specific application logic |
+| `src/server/` | Server-side services, repositories, and jobs |
+| `src/ai/` | AI, embeddings, RAG, and recommendation logic |
+| `src/lib/` | Shared infrastructure, utilities, and permissions |
+| `src/types/` | TypeScript types |
+| `src/config/` | Application configuration |
+| `prisma/` | Database schema and seed data |
+| `tests/` | Unit, integration, and end-to-end tests |
+| `docs/` | Architecture, API, deployment, and product documentation |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Keep route files focused on pages and routing; put reusable UI and business logic in their corresponding components and feature/server modules.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Optional image uploads
 
+Cloudinary uploads are signed. Profile logos and cover images, opportunity banners, community report photos, business products, and services may include images or be published without them. The uploader accepts JPG, PNG, WebP, and AVIF files up to 5 MB.
 
+## Useful links
 
-# basic Startup
-
-Start with exactly these:
-
-kakuma-community-hub/
-│
-├── prisma/
-│   ├── schema.prisma
-│   └── seed.ts
-│
-├── src/
-│   ├── app/
-│   │   ├── layout.tsx
-│   │   ├── page.tsx
-│   │   ├── globals.css
-│   │   ├── (auth)/
-│   │   └── api/
-│   │
-│   ├── components/
-│   │   ├── ui/
-│   │   ├── navigation/
-│   │   └── landing/
-│   │
-│   ├── features/
-│   │   ├── auth/
-│   │   ├── users/
-│   │   └── opportunities/
-│   │
-│   ├── lib/
-│   │   ├── db.ts
-│   │   ├── auth.ts
-│   │   └── permissions.ts
-│   │
-│   └── types/
-│
-├── public/
-├── tests/
-├── docs/
-├── .env.example
-├── README.md
-└── package.json
-
-
-🏗️ Recommended Project Structure
-kakuma-community-hub/
-│
-├── .env
-├── .env.example
-├── .gitignore
-├── README.md
-├── package.json
-├── tsconfig.json
-├── next.config.ts
-├── eslint.config.mjs
-├── postcss.config.mjs
-├── components.json
-├── middleware.ts
-│
-├── prisma/
-│   ├── schema.prisma
-│   ├── seed.ts
-│   └── migrations/
-│       └── ...
-│
-├── public/
-│   ├── images/
-│   │   ├── logo/
-│   │   ├── hero/
-│   │   ├── opportunities/
-│   │   ├── organizations/
-│   │   ├── businesses/
-│   │   └── services/
-│   │
-│   ├── icons/
-│   └── manifest.json
-│
-├── src/
-│   │
-│   ├── app/
-│   │   │
-│   │   ├── layout.tsx
-│   │   ├── page.tsx
-│   │   ├── globals.css
-│   │   │
-│   │   ├── (auth)/
-│   │   │   ├── login/
-│   │   │   │   └── page.tsx
-│   │   │   ├── register/
-│   │   │   │   └── page.tsx
-│   │   │   ├── forgot-password/
-│   │   │   │   └── page.tsx
-│   │   │   └── reset-password/
-│   │   │       └── page.tsx
-│   │   │
-│   │   ├── opportunities/
-│   │   │   ├── page.tsx
-│   │   │   ├── [id]/
-│   │   │   │   └── page.tsx
-│   │   │   └── categories/
-│   │   │       └── [slug]/
-│   │   │           └── page.tsx
-│   │   │
-│   │   ├── organizations/
-│   │   │   ├── page.tsx
-│   │   │   └── [slug]/
-│   │   │       └── page.tsx
-│   │   │
-│   │   ├── businesses/
-│   │   │   ├── page.tsx
-│   │   │   └── [slug]/
-│   │   │       └── page.tsx
-│   │   │
-│   │   ├── services/
-│   │   │   ├── page.tsx
-│   │   │   └── [slug]/
-│   │   │       └── page.tsx
-│   │   │
-│   │   ├── skills/
-│   │   │   ├── page.tsx
-│   │   │   └── [slug]/
-│   │   │       └── page.tsx
-│   │   │
-│   │   ├── events/
-│   │   │   ├── page.tsx
-│   │   │   └── [id]/
-│   │   │       └── page.tsx
-│   │   │
-│   │   ├── map/
-│   │   │   └── page.tsx
-│   │   │
-│   │   ├── community/
-│   │   │   ├── page.tsx
-│   │   │   └── reports/
-│   │   │       ├── page.tsx
-│   │   │       └── create/
-│   │   │           └── page.tsx
-│   │   │
-│   │   ├── ai/
-│   │   │   └── page.tsx
-│   │   │
-│   │   ├── dashboard/
-│   │   │   ├── layout.tsx
-│   │   │   ├── page.tsx
-│   │   │   │
-│   │   │   ├── profile/
-│   │   │   │   └── page.tsx
-│   │   │   │
-│   │   │   ├── recommendations/
-│   │   │   │   └── page.tsx
-│   │   │   │
-│   │   │   ├── applications/
-│   │   │   │   ├── page.tsx
-│   │   │   │   └── [id]/
-│   │   │   │       └── page.tsx
-│   │   │   │
-│   │   │   ├── bookmarks/
-│   │   │   │   └── page.tsx
-│   │   │   │
-│   │   │   └── notifications/
-│   │   │       └── page.tsx
-│   │   │
-│   │   ├── organization/
-│   │   │   ├── layout.tsx
-│   │   │   ├── page.tsx
-│   │   │   ├── profile/
-│   │   │   │   └── page.tsx
-│   │   │   ├── opportunities/
-│   │   │   │   ├── page.tsx
-│   │   │   │   ├── create/
-│   │   │   │   │   └── page.tsx
-│   │   │   │   └── [id]/
-│   │   │   │       └── edit/
-│   │   │   │           └── page.tsx
-│   │   │   ├── applications/
-│   │   │   │   └── page.tsx
-│   │   │   └── verification/
-│   │   │       └── page.tsx
-│   │   │
-│   │   ├── business/
-│   │   │   ├── layout.tsx
-│   │   │   ├── page.tsx
-│   │   │   ├── profile/
-│   │   │   │   └── page.tsx
-│   │   │   ├── products/
-│   │   │   │   └── page.tsx
-│   │   │   ├── services/
-│   │   │   │   └── page.tsx
-│   │   │   └── verification/
-│   │   │       └── page.tsx
-│   │   │
-│   │   ├── admin/
-│   │   │   ├── layout.tsx
-│   │   │   ├── page.tsx
-│   │   │   │
-│   │   │   ├── users/
-│   │   │   │   └── page.tsx
-│   │   │   │
-│   │   │   ├── organizations/
-│   │   │   │   └── page.tsx
-│   │   │   │
-│   │   │   ├── businesses/
-│   │   │   │   └── page.tsx
-│   │   │   │
-│   │   │   ├── opportunities/
-│   │   │   │   └── page.tsx
-│   │   │   │
-│   │   │   ├── services/
-│   │   │   │   └── page.tsx
-│   │   │   │
-│   │   │   ├── reports/
-│   │   │   │   └── page.tsx
-│   │   │   │
-│   │   │   ├── verification/
-│   │   │   │   └── page.tsx
-│   │   │   │
-│   │   │   ├── categories/
-│   │   │   │   └── page.tsx
-│   │   │   │
-│   │   │   └── analytics/
-│   │   │       └── page.tsx
-│   │   │
-│   │   └── api/
-│   │       ├── auth/
-│   │       │   └── [...nextauth]/
-│   │       │       └── route.ts
-│   │       │
-│   │       ├── users/
-│   │       │   └── route.ts
-│   │       │
-│   │       ├── opportunities/
-│   │       │   └── route.ts
-│   │       │
-│   │       ├── organizations/
-│   │       │   └── route.ts
-│   │       │
-│   │       ├── businesses/
-│   │       │   └── route.ts
-│   │       │
-│   │       ├── services/
-│   │       │   └── route.ts
-│   │       │
-│   │       ├── applications/
-│   │       │   └── route.ts
-│   │       │
-│   │       ├── notifications/
-│   │       │   └── route.ts
-│   │       │
-│   │       ├── reports/
-│   │       │   └── route.ts
-│   │       │
-│   │       ├── search/
-│   │       │   └── route.ts
-│   │       │
-│   │       └── ai/
-│   │           ├── chat/
-│   │           │   └── route.ts
-│   │           ├── recommendations/
-│   │           │   └── route.ts
-│   │           └── search/
-│   │               └── route.ts
-│   │
-│   ├── components/
-│   │   ├── ui/
-│   │   ├── layout/
-│   │   ├── navigation/
-│   │   ├── cards/
-│   │   ├── forms/
-│   │   ├── modals/
-│   │   ├── tables/
-│   │   ├── charts/
-│   │   ├── maps/
-│   │   ├── ai/
-│   │   └── shared/
-│   │
-│   ├── features/
-│   │   ├── auth/
-│   │   │   ├── actions.ts
-│   │   │   ├── queries.ts
-│   │   │   ├── validations.ts
-│   │   │   └── types.ts
-│   │   │
-│   │   ├── users/
-│   │   ├── opportunities/
-│   │   ├── organizations/
-│   │   ├── businesses/
-│   │   ├── services/
-│   │   ├── applications/
-│   │   ├── skills/
-│   │   ├── events/
-│   │   ├── notifications/
-│   │   ├── community-reports/
-│   │   ├── search/
-│   │   └── recommendations/
-│   │
-│   ├── lib/
-│   │   ├── db.ts
-│   │   ├── auth.ts
-│   │   ├── permissions.ts
-│   │   ├── validation.ts
-│   │   ├── utils.ts
-│   │   ├── constants.ts
-│   │   ├── pagination.ts
-│   │   └── errors.ts
-│   │
-│   ├── server/
-│   │   ├── services/
-│   │   │   ├── user.service.ts
-│   │   │   ├── opportunity.service.ts
-│   │   │   ├── organization.service.ts
-│   │   │   ├── business.service.ts
-│   │   │   ├── application.service.ts
-│   │   │   └── recommendation.service.ts
-│   │   │
-│   │   ├── repositories/
-│   │   │   ├── user.repository.ts
-│   │   │   ├── opportunity.repository.ts
-│   │   │   ├── organization.repository.ts
-│   │   │   └── business.repository.ts
-│   │   │
-│   │   └── jobs/
-│   │       ├── recommendation.job.ts
-│   │       └── embedding.job.ts
-│   │
-│   ├── ai/
-│   │   ├── client.ts
-│   │   ├── prompts/
-│   │   │   ├── assistant.prompt.ts
-│   │   │   ├── recommendation.prompt.ts
-│   │   │   └── search.prompt.ts
-│   │   │
-│   │   ├── embeddings/
-│   │   │   ├── generate.ts
-│   │   │   └── search.ts
-│   │   │
-│   │   ├── rag/
-│   │   │   ├── retrieve.ts
-│   │   │   ├── context.ts
-│   │   │   └── answer.ts
-│   │   │
-│   │   ├── recommendations/
-│   │   │   ├── score.ts
-│   │   │   ├── rank.ts
-│   │   │   └── explain.ts
-│   │   │
-│   │   └── types.ts
-│   │
-│   ├── types/
-│   │   ├── user.ts
-│   │   ├── opportunity.ts
-│   │   ├── organization.ts
-│   │   ├── business.ts
-│   │   ├── service.ts
-│   │   ├── application.ts
-│   │   ├── ai.ts
-│   │   └── api.ts
-│   │
-│   ├── config/
-│   │   ├── site.ts
-│   │   ├── navigation.ts
-│   │   ├── categories.ts
-│   │   └── permissions.ts
-│   │
-│   └── hooks/
-│       ├── use-mobile.ts
-│       ├── use-debounce.ts
-│       ├── use-search.ts
-│       └── use-notifications.ts
-│
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
-│
-├── docs/
-│   ├── architecture/
-│   │   ├── system-architecture.md
-│   │   ├── database.md
-│   │   └── ai-architecture.md
-│   │
-│   ├── api/
-│   ├── deployment/
-│   └── product/
-│       ├── requirements.md
-│       └── user-stories.md
-│
-├── docker/
-│   └── ...
-│
-└── .github/
-    └── workflows/
-        ├── ci.yml
-        ├── test.yml
-        └── deploy.yml
-🧭 How the structure works
-
-The most important folders are these:
-
-
-
-src/
-│
-├── app/          → Pages and routes
-├── components/   → Reusable UI
-├── features/     → Feature-specific frontend logic
-├── server/       → Backend/business logic
-├── ai/           → AI & recommendation engine
-├── lib/          → Shared infrastructure
-├── types/        → TypeScript types
-└── config/       → Application configuration
-
-This prevents your app/ directory from becoming a giant collection of business logic.
-
-🏠 1. Landing page
-
-Your generated landing page goes here:
-
-src/
-└── app/
-    └── page.tsx
-
-But don't put the entire landing page into page.tsx.
-
-Instead:
-
-src/components/
-├── navigation/
-│   ├── Navbar.tsx
-│   ├── DesktopMenu.tsx
-│   ├── MobileMenu.tsx
-│   └── DropdownMenu.tsx
-│
-└── landing/
-    ├── Hero.tsx
-    ├── SearchSection.tsx
-    ├── ImpactStats.tsx
-    ├── FeatureGrid.tsx
-    ├── FeaturedOpportunities.tsx
-    ├── AIRecommendationBanner.tsx
-    ├── HowItWorks.tsx
-    ├── CommunityCTA.tsx
-    └── Footer.tsx
-
-
-# Project Architecture
-
-⭐ The architecture I recommend you actually use
-
-If I were building this project with you, I'd keep the mental model very simple:
-
-                    KAKUMA COMMUNITY HUB_Platform
-                             │
-          ┌──────────────────┼──────────────────┐
-          │                  │                  │
-        PUBLIC             USERS             ADMIN
-          │                  │                  │
-          ▼                  ▼                  ▼
-     Landing Page       Dashboard          Admin Panel
-          │                  │                  │
-          └──────────────────┼──────────────────┘
-                             │
-                             ▼
-                         FEATURES
-                             │
-       ┌──────────┬──────────┼─────────┬──────────┐
-       ▼          ▼          ▼         ▼          ▼
- Opportunities Organizations Businesses Services Applications
-       │          │          │         │          │
-       └──────────┴──────────┼─────────┴──────────┘
-                             ▼
-                          SEARCH
-                             │
-                             ▼
-                     RECOMMENDATION
-                             │
-                             ▼
-                            AI
-                             │
-                    ┌────────┴────────┐
-                    ▼                 ▼
-                  RAG             Embeddings
-                    │                 │
-                    └────────┬────────┘
-                             ▼
-                        PostgreSQL
-                           + pgvector
+- [Next.js documentation](https://nextjs.org/docs)
+- [Learn Next.js](https://nextjs.org/learn)
+- [API documentation](docs/api/README.md)
+- [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying)
+- [Deploy on Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
